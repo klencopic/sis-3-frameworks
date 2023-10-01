@@ -1,92 +1,91 @@
-# Frameworks 2023
+# Systems III
+*Created for educational purposes
 
 
+Welcome to the GitLab repository for Systems III - Frameworks. The purpose of this repository is to provide you with supporting materials to help you become familiar with various web technologies commonly used in modern web development.
 
-## Getting started
+The content is divided into three main tutorials: back-end, front-end, and full-stack. Each tutorial focuses on developing essential components of a web application. During the lab sessions, we will guide you through these tutorials and complete a set of deliverables, which will be announced at the beginning of each session
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Before start
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Before you start developing, it's important to address a few technical requirements:
 
-## Add your files
+1. Ensure that you have a GitLab account, which will allow you to create merge requests, branches, issues, and perform other GitLab-related tasks.
+2. If you are using your own computer, make sure to set up the remote file system over SSH. If you're unsure how to do this, you can find tutorials in the e-classroom. If you can't find them there, you can access the instructions [here](./Tutorials/Set-up.pdf). 
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+
+## Clarifications 
+When using SSH, please note that we are NOT using the following command:
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/famnit-up/systems-iii/frameworks-2023.git
-git branch -M main
-git push -uf origin main
+$ ssh <enrolment_num>@www.studenti.famnit.upr.si
+```
+Instead, we will connect to the following Virtual Machine:
+
+```
+$ ssh <enrolment_num>@88.200.63.148
+```
+It's crucial to make this distinction as these two connections have different versions of software. For the purposes of these tutorials, it is more convenient to use 88.200.63.148.
+
+## Troubleshooting
+
+As your teaching assistant, I'm here to assist you with any technical difficulties you may encounter. However, before reaching out to me for help, please consider going through this checklist:
+
+### General
+#### Are you running the command with the proper arguments? For instance:
+
+```
+$ node index.js
+```
+This command will execute successfully only if you've invoked it in the directory where the 'index.js' file is located. I won't go into further detail on this matter since you've already covered it in Computer Practicum I.
+
+ #### Are you running your script in the correct instance? 
+ Keep in mind that we're working with a remote virtual machine, so it's crucial to confirm that you're executing commands via the SSH connection. You can usually distinguish this terminal from any others you may have open by checking the terminal prompt, which should resemble one of the following:
+```
+ 89183001@studenti2:~$ 
+```
+or 
+```
+ 89183001@88.200.63.148:~$ 
 ```
 
-## Integrate with your tools
+#### Have you installed the project dependencies? 
+In Node.js, every project includes a vital configuration file named package.json. This file serves as the central hub for managing and defining the attributes of a Node.js project. It contains essential metadata about the project, encompassing details such as its name, version, dependencies, and various other configurations. Let's delve into what you'd typically encounter within this file.
 
-- [ ] [Set up project integrations](https://gitlab.com/famnit-up/systems-iii/frameworks-2023/-/settings/integrations)
+After pulling a project from a Git repository, it's usually necessary to install the local Node.js dependencies. This step is crucial because these dependencies might have been updated in another branch. Additionally, it's common practice to include the node_modules folder in the .gitignore file to avoid storing these dependencies in version control.
+ The command to install the dependcies is:
 
-## Collaborate with your team
+```
+npm install
+```
+This command should be executed in the same directory where the package.json file is located.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+#### Why I get  onnection refused from my database
+Ensure that you have correctly configured the credentials in the .env configuration file. If you still encounter connection refusal issues even after correctly setting the credentials, double-check that the server is running exclusively on the virtual machine and nowhere else. You may want to review the previous steps to confirm the setup.
 
-## Test and Deploy
+#### Server is running, database is connected but no data can be fetched in the front-end
+Verify that you are making the correct calls to valid endpoints, and ensure that you have enabled CORS on the server.
 
-Use the built-in continuous integration in GitLab.
+Finally, If you've reached this sentence, it likely means that your issue persists, and neither Google nor Chat GPT has been able to provide a solution. Unfortunatley, I d'ont like to write/exchange multiple messages via email, so please follow these steps to get assistance:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+- Your name
+- Yout issue (elaborate)
+- Evidence (video-pictures, didyou followe the Troubleshooting guide, right?)
+- Three options for a online meeting. e.g Friday 28th, at 20:00
 
-***
+After receiving your email, I will promptly respond to confirm or suggest an alternative time for the meeting. Your cooperation in providing detailed information will help us resolve your technical difficulties more efficiently.
 
-# Editing this README
+## Tutorials
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+[00. Back-end](./Tutorials/00_Back-end.md)
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+[01. Front-end](./Tutorials/01_Front-end.md)
 
-## Name
-Choose a self-explaining name for your project.
+[02. Full stack](./Tutorials/02_FullStack.md)
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## Resources
+External database (substitute this in your .env file)
+- DB_HOST=localhost
+- DB_USER=studenti
+- DB_PASS=12345678
+- DB_DATABASE=Qcodeigniter
