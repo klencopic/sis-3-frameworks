@@ -1,26 +1,19 @@
 
 # Front-end using ReactJS
 
+## CodeSanbox
+[CodeSandbox](https://codesandbox.io/signin?utm_source=landingpage) is an online integrated development environment (IDE) that allows developers to create, share, and iterate on web applications in a collaborative and sandboxed environment. It provides a platform for writing and testing code in various programming languages, with a primary focus on web development technologies such as HTML, CSS, and JavaScript.
+
+In this scenario, CodeSandbox is particularly suitable for us. It not only enables us to offload the creation of servers to the Virtual Server of the University but also serves as a valuable tool to demonstrate the independent development of the back-end
+
 ## Basic
+ 1. Create and account in CodeSandBox
+
 1. Install react using npx 
+2. Go to the dashboard and look for the optionm that say "New sandbox". Select it.
+3. From the Quick start tab, select the ibe tha says "React", note that there is an option tha says "React TypeScript", we are not interested in this one so do not confuse it.
 
-``` console
-    npx create-react-app name-of-your-app
-```
--in my case I have installed my app in the root folder of my CMS project and I have named it: client-dev
-
-2. If react was succcesfully installed you will see something like this in your console:
-<img src="./assets/ReactInstalled.png" width="500" alt="accessibility text">
-
-3. Now let's navigate into the client-dev and type in the console
-``` console
-    npm start
-```
-- To see the result, simply type in your browser http://localhost:3000, if you are runnin this remotely then you will have to put the ip address you want to reach, for example: http://88.200.63.148:3000. 
-
-- So far we have to diffetent address: one for the server in the port 5000 and the second one in the client in the port 3000. We will keep this like thtat for now. At the end fo the projects things will be a littel bit different.
-
-- The structure of the folder must be something like this:
+- The recently created project should have an structure similar to this:
 <img src="./assets/client-folders.png" width="500" alt="accessibility text">
 
 - We are interested in the folder that is named *src*, because there is where the logic of the *front-end* will happen.
