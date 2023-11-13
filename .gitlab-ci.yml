@@ -1,0 +1,27 @@
+stages:
+  - test
+
+check_backend:
+  stage: test
+  script:
+    - if [ -d "back-end" ]; then
+        echo "back-end folder found";
+        if [ -f "back-end/index.js" ]; then
+          echo "index.js file found in back-end folder";
+          if [ -d "back-end/node_modules" ]; then
+            echo "Error: node_modules folder found in back-end";
+            exit 1;
+          else
+            echo "No node_modules folder found in back-end";
+          fi
+          echo "Running node index.js";
+          cd back-end;
+          node index.js;
+        else
+          echo "Error: index.js file not found in back-end folder";
+          exit 1;
+        fi
+      else
+        echo "Error: back-end folder not found";
+        exit 1;
+      fi
