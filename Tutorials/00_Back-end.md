@@ -41,7 +41,7 @@ Please follow these steps in order.
 
 ### The server
 
-1. Clone this [repository](https://gitlab.com/famnit-up/systems-iii/frameworks/-/tree/main)  and create a folder at the root lavel and name it *CMS* (short for Content Managment System) at the root level.
+1. Clone this [repository](https://gitlab.com/famnit-up/systems-iii/frameworks/-/tree/main)  and create a folder at the root lavel and name it *back-end* (short for Content Managment System) at the root level.
 
 2. Navigate inside the folder and run the command
 
@@ -105,7 +105,7 @@ node index.js
 
 ### The routes
 
-1. Inside your *CMS* folder create a new folder and name it: *routes*.
+1. Inside your *back-end* folder create a new folder and name it: *routes*.
 
 2. Inside *routes* folder create an empty javascript document and name it: *novice.js*.
 
@@ -156,7 +156,7 @@ node path/to/your/index.js
 
 ### The DB
 
-1. In the root of our CMS project, create a folder and name it DB.
+1. In the root of our back-end project, create a folder and name it DB.
 
 2. Inside the DB folder, create an empty file and name it  **dbConn.js**
 
@@ -194,15 +194,16 @@ const  conn = mysql.createConnection({
 - In the next step we will define the *host*, *user* and *password*.
 - You may have noticed that I've included a block of code provisionally to check if the connection to the database was successful. For now, let's just save it.
 
-7. In the CMS folder, create a file a name it *.env*, open it and write:
+7. In the back-end folder, create a file a name it *.env*, open it and write:
 
 ```text
-DB_HOST=the address of your database
-DB_USER=the user from your data base
-DB_PASS=your password
+DB_HOST=localhost
+DB_USER=studenti
+DB_PASS=12345678
+DB_DATABASE=Qcodeigniter
 ```
 
-- We want to keep this information private and not expose it in your repository, so let's also create a *.gitignore* file in the CMS folder and simply put:
+- We want to keep this information private and not expose it in your repository, so let's also create a *.gitignore* file in the back-end folder and simply put:
 
 ```text
 .env
@@ -258,6 +259,7 @@ dataPool.creteNovica=(title,slug,text)=>{
   })
 }
 
+module.exports = dataPool;
 ```
 
 - Note that I have created an object variable to store the data returned after each query.
