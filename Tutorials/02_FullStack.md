@@ -3,13 +3,12 @@
 ## Stablishing the communications Server-Client
 So far  in these set of tutorials we have: i) built a server using **Express.js**, ii) established a connections with the db using **mysql** and iii) bulit the client(front-end) using **React.js**.
 
-Finally is time to connect them all, to achieve this, we will:
+Finally is time to connect the front and back end, to achieve this, we will:
 
 - Install [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) as node dependency.
 - Consume the API we created during **back-end** tutorial
 - <strike>Create a proxy so we dont have to change the endpoints while building the final version of our client</strike>
 - Create the logic in the client side to handle the responses from the server
-- Define a way to keep an user logged
 
 ### CORS
 1. Install CORS dependency. If we don't do this step we wont be able to retreive data from the server in the client server
@@ -27,9 +26,7 @@ const cors=require("cors")
 //Some configurations
 app.use(express.urlencoded({extended : true}));
 app.use(cors({
-  origin:["http://88.200.63.148:3000"],
   methods:["GET", "POST"],
-  credentials:true
 }))
 ``` 
 
@@ -38,8 +35,10 @@ app.use(cors({
 1. In client-side project install [axios](https://github.com/axios/axios) 
 
 ```console
-npm install axios
+npm install axios 
+yarn add axios
 ```
+- use yarn if you ar working with codesandbox
 
 2. In **NoviceView** create the state object and create an empty array to hold the server response
 
@@ -65,6 +64,7 @@ componentDidMount()
   })
 }
 ```
+
 - *componentDidMount* is part of the life cycle of ***React.js*
 - Notice that we are using axios and the *get* method to access the *'/novice'* endpoint
 - As we are working with asynchronous requests we can use the method *.then*
@@ -102,27 +102,14 @@ let data=this.state.Novice
 
 6. If you did everything ok, you should be able to see the news from our data base.
 
-### Proxy
-
-1.<strike> Go to the *package.json* from our *client-dev* app and insert the rule for the proxy 
-
-```javascript
-"proxy":"http://88.200.63.148:5000"
-```
-2. Now fix the **NoviceView** and change the axios enpoint for *'/novice'*
-- From now on we won't need to specify the whole URL</strike> 
-
-
 ### Client logic
 
 I want to let you know that many things in this next section can be improve in many ways, but as we are triying ot learn we will follow the long/naive path. So this section will be subdivided into:
 
 - Single news
 - Add news 
-- Sign in
 - Login
-- Using cookies and express-session
-
+- Sign in
 
 #### Single news
 So far we have the view all the news available on the db. Each of  them is sent from the server with the corresponding id, so it will be easy to make a request to the server and get an specific **novica**. However remember that each component (NoviceView and SingleNovicaView) are children of the App.js component. So how can we share data between children? 
@@ -194,7 +181,7 @@ constructor(props)
 ```javascript
 componentDidMount()
 {
-axios.get("/novice/"+this.props.data)
+axios.get("http://88.200.63.148:5000/novice/"+this.props.data)
 .then(response =>{
     console.log(response.data)
     this.setState({
@@ -247,7 +234,7 @@ constructor(props){
   }
 }
 ```
-3. Add to everyinput tag the atttribute name and assign the corresponding value, for example:
+3. Add to every input tag the atttribute name and assign the corresponding value, for example:
 ```javascript
 <input name="title" type="text" class="form-control"  placeholder="Title..."/>
 ```
@@ -273,7 +260,7 @@ QGetTextFromField=(e)=>{
 
 ```javascript
 QPostNovica=()=>{
-  axios.post('/novice',{
+  axios.post('http://88.200.63.148:5000/novice',{
     title:this.state.novica.title,
     slug:this.state.novica.slug,
     text:this.state.novica.text
@@ -292,6 +279,146 @@ QPostNovica=()=>{
 ```
 - If you pay attention, it would be much beterr to implement the logic to check if the data that is intended to be submitted is complete or not in the client side.
 - Let's follow a simliar approach in Signup and Login views
+
+
+#### Login
+ For login, we have to repeat same step 1-7 from previous views(AddNovicaView) but using the corresponging name variables. 
+
+1. So, in In ***LoginView.js***  add a constructor
+
+```javascript
+  constructor(props)
+    {
+        super(props);
+        this.state={
+            user:{
+                type:"login"
+            }
+        }
+    }
+```
+ 2. Add a method to handle user's input
+
+ ```javascript
+
+    QGetTextFromField=(e)=>{
+        this.setState(prevState=>({
+            user:{...prevState.user,[e.target.name]:e.target.value}
+        }))
+    }
+```
+3. Add the prop on change to each input elememnt in out JSX
+
+```javascript
+<input onChange={(e)=>this.QGetTextFromField(e)} name="username" type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
+```
+
+4. Create a post method so the user data make post request **App.js***
+```javascript
+     QPostLogin=()=>{
+      axios.post('http://88.200.63.148:5000/users/login',
+      {
+        username:this.state.user.username,
+        password:this.state.user.password
+      })
+      .then(response=>{
+        console.log("Sent to server...")
+        console.log(response.status)
+        if(response.status == 200){
+          console.log(response.data[0])
+          this.props.QUserFromChild(obj)
+        }else if(response.status == 204){
+           // Request was processed but user is not registered, or credentials are incorrect, do something.
+           console.log("Request was ok but something with user data is no correct")
+        }else{
+          console.log("Something is really wrong, DEBUG!")
+        }
+
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+    }    
+```
+
+- Note thatThis will fail if no *prop* ***QUserFromChild*** has been added to the LoginView component
+
+```javascript
+    this.props.QUserFromChild(obj)
+```
+
+- To avoid problems make sure in *App.j* you are actually adding it.
+
+```javascript
+     <LoginView QUserFromChild={} />;
+```
+
+- Another way to ensure it is a required component is to define it as a *required prop*
+
+
+```javascript
+  import PropTypes from 'prop-types';
+  ... all other code...
+     LoginView.propTypes = {
+  QUserFromChild: PropTypes.func.isRequired,
+};
+```
+
+5. In ***App.js*** add the corresponding prop to *LogingView* component to receive the call back and set in the local state the user status, just if we have receiced a positive response.
+
+```javascript
+<LoginView QUserFromChild={this.QSetUser}/>
+```
+6. Create the method to set the local state, so we dont need to refresh the page:
+ ```javascript
+QSetUser=(obj)=>{
+  this.setState({
+    userStatus:{logged:true,user:[obj]}
+  })
+}
+```
+
+7. Before testing, update the login endpoint with the following logic:
+
+ ```javascript
+
+users.post('/login', async (req, res, next) => {
+   try{
+    const username = req.body.username;
+	const password = req.body.password;
+    if (username && password){
+        const queryResult=await DB.AuthUser(username)        
+        if(queryResult.length>0){
+            if(password===queryResult[0].user_password){
+                console.log(queryResult)
+                res.send({logged:true, user:queryResult[0]})
+            } else{
+                res.sendStatus(204)
+                 console.log("INCORRECT PASSWORD")
+            }
+        } else{
+            res.sendStatus(204)
+            console.log("USER NOT REGISTRED");   
+        }
+    } 
+    else {
+        res.sendStatus(204)
+        console.log("Please enter Username and Password!")
+    }
+    res.end();
+   }catch(err){
+    console.log(err)
+    res.sendStatus(500)
+    next()
+   }
+});
+ ```
+
+8. For you to practice...
+- If you manage to login, change the view make the app to navigate to another view, for example: *AddNovicaView*.
+- Make a conditional render for a logout button ang logout the session.
+- Handle unexpected responses
+
 
 #### Sign in
 1. Open ***SignupView.js*** and import axios
@@ -331,7 +458,7 @@ QGetTextFromField=(e)=>{
 
 ```javascript
 QPostSignup=()=>{
-  axios.post('/users/register',{
+  axios.post('http://88.200.63.148:5000/users/register',{
     username:this.state.user.username,
     email:this.state.user.email,
     password:this.state.user.password
@@ -350,133 +477,42 @@ QPostSignup=()=>{
 ```
 - Same case as before, it woul be a nice idea to revise the data in teh client side before submit it
 
-#### Using cookies and express-session
- For login, we have to repeat same step 1-7 from previous views(AddNovicaView and SignupView). But as you might notice, if we refresh the browser our session will expire, but moreover non of the other react components know tha we are logged in the app. To solve this issue let's:
 
- 1. In the server side install:
- ```console
-npm install cookie-parser express-session
+
+## DEPLOYMENT
+1. Stop your react server. Make sure you are in the root folder. In the command line write:
+
+```console
+npm run build
 ```
-2. Import the cookie-parser in the ***index.js*** from our server and define the default settings
- ```javascript
-const cookieParser=require("cookie-parser")
+- Let the process finish.
+- Once it is done, it will produce a folder named *build*. 
+2. Stop your *express* server and copy the folder build into the root of the back.end proejct.
+3. If you have not, install the path dependecy in the back-end project and import it in *index.js*
+```console
+npm install path
+```
+4. In *index.js* in  the back-end add teh following lines_
 
-app.use(express.urlencoded({extended : true}));
-app.use(cookieParser("somesecret"))
- ```
+```javascript
+app.use(express.static(path.join(__dirname, "build")))
 
-3. Go to ***users.js*** and import express-session and the define the following settings:
-server and define the default settings
- ```javascript
-const session = require("express-session")
-
-
-users.use(session({
-  secret:"somesecret",
-  resave:false, 
-  saveUninitialized:false,
-  cookies:{
-      expires:60*2
-  }
-
-}))
- ```
-
-4. Create a new endpoint get for login and insert the follwing logic
- ```javascript
-
-users.get('/login',(req,res)=>{
-   if(req.session.user) 
-   {
-   res.send({
-        logged:true,
-        user:req.session.user
-    })
-
-   }
-   else
-   {
-       res.send({logged:false})
-   }
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "build", "index.html")) 
 })
- ```
-
-5. In client-side, open **app.js** and using *componentDidMount()* in-built function make a call to the new enpoint, so we get inforamtion about wheter the user is logged or not. 
- ```javascript
-componentDidMount(){
-  axios.get('/users/login')
-  .then(response=>{
-    console.log(response)
-  })
-}
- ```
-
-
-
-6. In ***LoginView.js*** update the post response so the user data can be caught by the **App.js***
-```javascript
-   QPostLogin=()=>{
-        axios.post('/users/login',{
-          username:this.state.user.username,
-          password:this.state.user.password
-        },{withCredentials:true})
-        .then(response=>{
-          console.log("Sent to server...")
-          this.QSendUser2Parent(response.data[0])
-        })
-        .catch(err=>{
-          console.log(err)
-        })
-      }
 ```
 
-7. Implement the following method to pass the object the response to the parent
-```javascript
- QSendUser2Parent=(obj)=>{
-    this.props.QUserFromChild(obj)
-  } 
-
+- We ar using express.static to point to the folder we just copied from react, this will warranty we will returnd the index.html inside that folder.
+- Check in you browser, you react-app now is hosted inside the express server.
+- Now your web pager/service is online. Unfortunatel, it will stop once you logout from ssh. To avois this, let use a deamon service to run forever our application, or at least till the sys admin allows it. :)
+5. Stop your server and run it again, but instead of using nodemon or node, let use the following command.
+```console
+forever start index.js
 ```
-
-8. In ***App.js*** add the corresponding prop to *LogingView* component to receive the call back and set in the local state the user status.
-
-```javascript
-<LoginView QUserFromChild={this.QSetUser}/>
+- Now your server is running forever. If you want to stop it, simply run:
+```console
+forever stop index.js
 ```
-9. Create the method to set the local state, so we dont need to refresh the page:
- ```javascript
-QSetUser=(obj)=>{
-  this.setState({
-    userStatus:{logged:true,user:[obj]}
-  })
-}
-```
-- we are customizing the response so it matches with the one we defined in the server side
-
-10. In componentDidMouth method update make get call to our api to check if we are logged. 
- ```javascript
-componentDidMount(){
-  axios.get('/users/login')
-  .then(response=>{
-    console.log(response)
-    this.setState({userStatus:response.data})
-
-  })
-}
- ```
- - componentDidMoint is called just once at the beginign of the render, so this will be helpful is someone refreshes the page
-
-
-11. For you to practice...
-- Once logged in, change the view  to AddNovicaView
-- Make a conditional render for a logout button ang logout the session
-
-
-
-
+- Just make sure you are in the root of your porject and that your entry file is named index.js
 
 Finally, if you are reading this last lines, let me congratulate you. You have finished our set of tutorials. Thank you for following me these weeks. 
-
-See you around!! and don't forget to submit.
-- *There will be extra poitn for those who manage to complete step 11 of this las section.*
-- *Be aware that our project  is not ready for production,  there a few more steps to implement in order to achieve this.*
