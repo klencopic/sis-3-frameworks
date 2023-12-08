@@ -1,5 +1,4 @@
-import React from "react";
-import "./styles.css";
+import {Component} from "react";
 
 import HomeView from "./CustomComponents/HomeView";
 import AboutView from "./CustomComponents/AboutView";
@@ -9,7 +8,7 @@ import SignupView from "./CustomComponents/SignupView";
 import LoginView from "./CustomComponents/LoginView";
 import SingleNovicaView from "./CustomComponents/SingleNovicaView";
 
-class App extends React.Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,6 +43,7 @@ class App extends React.Component {
       Novica:obj.id || 0
     });
   };
+
 
   render() {
     return (
