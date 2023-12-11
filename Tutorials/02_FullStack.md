@@ -109,7 +109,7 @@ I want to let you know that many things in this next section can be improve in m
 - Single news
 - Add news 
 - Login
-- Sign in
+- Sign up
 
 #### Single news
 So far we have the view all the news available on the db. Each of  them is sent from the server with the corresponding id, so it will be easy to make a request to the server and get an specific **novica**. However remember that each component (NoviceView and SingleNovicaView) are children of the App.js component. So how can we share data between children? 
@@ -420,7 +420,7 @@ users.post('/login', async (req, res, next) => {
 - Handle unexpected responses
 
 
-#### Sign in
+#### Sign up
 1. Open ***SignupView.js*** and import axios
 2. Add a constructor and define a property named **user** of type object into the local state
 ```javascript
