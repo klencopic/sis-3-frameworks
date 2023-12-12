@@ -41,7 +41,7 @@ Please follow these steps in order.
 
 ### The server
 
-1. Clone this [repository](https://gitlab.com/famnit-up/systems-iii/frameworks/-/tree/main)  and create a folder at the root lavel and name it *back-end* (short for Content Managment System) at the root level.
+1. Clone this [repository](https://gitlab.com/famnit-up/systems-iii/frameworks-2023/)  and create a folder at the root lavel and name it *back-end* (short for Content Managment System) at the root level.
 
 2. Navigate inside the folder and run the command
 
