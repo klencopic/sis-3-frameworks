@@ -3,12 +3,9 @@
 
 ## MySQL
 
-At this stage of the Lab Sessions, I assume that you already have experience with MySQL and phpMyAdmin. Therefore, we'll skip that part and empower you to create your own data models. You can access this databease through phpmyadmin: http://88.200.63.148/phpmyadmin. To login use 
+At this stage of the Lab Sessions, I assume that you already have experience with MySQL and phpMyAdmin. Therefore, we'll skip that part and empower you to create your own data models.
 
-USER_NAME: studenti
-PASSWORD: 12345678
-
-We will construct our own CRUD operations using Node.js and Express.js.
+Since the objective of this tutorial series is to replicate the functionality of your existing ***CodeIgniter project***, we will connect to your pre-existing database. However, we will construct our own CRUD operations using Node.js and Express.js.
 
 ## NodeJS
 
@@ -33,7 +30,7 @@ We will construct our own CRUD operations using Node.js and Express.js.
 
 ## Creating a NodeJs + Express.js server
 
-We'll dive into ExpressJS by building something practical. In this case, we'll replicate implement a simple web application with front-end and back-end. This tutorial is divided into four steps:
+We'll dive into ExpressJS by building something practical. In this case, we'll replicate the functionality of your codeigniter project. This tutorial is divided into four steps:
 
 - [The server](#the-server)
 - [The routes](#the-routes)
@@ -44,7 +41,7 @@ Please follow these steps in order.
 
 ### The server
 
-1. Clone this [repository](https://gitlab.com/famnit-up/systems-iii/frameworks-2023/)  and create a folder at the root lavel and name it *back-end* (short for Content Managment System) at the root level.
+1. Clone this [repository](https://gitlab.com/famnit-up/systems-iii/frameworks-2023/)  and create a folder at the root level and name it *back-end* (short for Content Managment System) at the root level.
 
 2. Navigate inside the folder and run the command
 
@@ -58,7 +55,7 @@ npm init
 3. Install your first dependency by running the command:
 
 ```console
-npm install express
+npm install express --save
 ```
 
 4. In the root of this project, create a javascript empty file, by convention you should name it **index.js** but it does't really matter.
@@ -151,10 +148,10 @@ app.use('/novice', novice);
 node path/to/your/index.js
 ```
 
-9. In the browser visit *http://ADDRESS:5000/*
+9. In the browser visit *http://ADDRESS:5000/novice
 
 - If you've followed each step so far, you should see a message in the console and the string "novice" in the browser.
-- The next step in this tutorial is to consume information from the database. So, every time a user visits a specific endpoint, such as http://ADDRESS:5000/novice, we retrieve news from the database.
+- The next step in this tutorial is to consume information from the database you created in your codeigniter project. So, every time a user visits a specific endpoint, such as http://ADDRESS:5000/novice, we retrieve news from the database.
 - The idea for the next steps is: i) establish a connection with the database, and then ii) create our own CRUD operations.
 
 ### The DB
@@ -229,7 +226,7 @@ For this part, it's important that you understand the logic of the server and ho
 
 So far, we have learned how to create a server that listens for incoming requests, how to create a route to handle requests on a specific endpoint, and lastly, how to establish a connection with the database.
 
-Now it's time to expand our application and write the code for Consulting, Reading, Updating, and Deleting data from our database.
+Now it's time to expand our application and write the code for Creating, Reading, Updating, and Deleting data from our database.
 
 1. In **dbConn.js** add the code to handle the CRUD operations:
 ```javascript
@@ -455,13 +452,6 @@ If you are curious about it please read some basic of [asynchronus programming](
 
 For now we have reached this tutorial. There are a few more thing to do in the back-end but we will finish them during later on. 
 
-## Exercises
-
-## Exercise 1:
-Using Postman](https://www.postman.com/) send GET and POST request to the server. 
-
-## Exercise 2:
-Update sciprts so that POST request to novice, which adds a new news item responds in JSON format. Currently it only responds with status 200.
 
 
 
