@@ -3,9 +3,12 @@
 
 ## MySQL
 
-At this stage of the Lab Sessions, I assume that you already have experience with MySQL and phpMyAdmin. Therefore, we'll skip that part and empower you to create your own data models.
+At this stage of the Lab Sessions, I assume that you already have experience with MySQL and phpMyAdmin. Therefore, we'll skip that part and empower you to create your own data models. You can access this databease through phpmyadmin: http://88.200.63.148/phpmyadmin. To login use 
 
-Since the objective of this tutorial series is to replicate the functionality of your existing ***CodeIgniter project***, we will connect to your pre-existing database. However, we will construct our own CRUD operations using Node.js and Express.js.
+USER_NAME: studenti
+PASSWORD: 12345678
+
+We will construct our own CRUD operations using Node.js and Express.js.
 
 ## NodeJS
 
@@ -30,7 +33,7 @@ Since the objective of this tutorial series is to replicate the functionality of
 
 ## Creating a NodeJs + Express.js server
 
-We'll dive into ExpressJS by building something practical. In this case, we'll replicate the functionality of your codeigniter project. This tutorial is divided into four steps:
+We'll dive into ExpressJS by building something practical. In this case, we'll replicate implement a simple web application with front-end and back-end. This tutorial is divided into four steps:
 
 - [The server](#the-server)
 - [The routes](#the-routes)
@@ -55,7 +58,7 @@ npm init
 3. Install your first dependency by running the command:
 
 ```console
-npm install express --save
+npm install express
 ```
 
 4. In the root of this project, create a javascript empty file, by convention you should name it **index.js** but it does't really matter.
@@ -151,7 +154,7 @@ node path/to/your/index.js
 9. In the browser visit *http://ADDRESS:5000/*
 
 - If you've followed each step so far, you should see a message in the console and the string "novice" in the browser.
-- The next step in this tutorial is to consume information from the database you created in your codeigniter project. So, every time a user visits a specific endpoint, such as http://ADDRESS:5000/novice, we retrieve news from the database.
+- The next step in this tutorial is to consume information from the database. So, every time a user visits a specific endpoint, such as http://ADDRESS:5000/novice, we retrieve news from the database.
 - The idea for the next steps is: i) establish a connection with the database, and then ii) create our own CRUD operations.
 
 ### The DB
