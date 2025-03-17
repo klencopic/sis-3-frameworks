@@ -455,6 +455,13 @@ If you are curious about it please read some basic of [asynchronus programming](
 
 For now we have reached this tutorial. There are a few more thing to do in the back-end but we will finish them during later on. 
 
+## Exercises
+
+## Exercise 1:
+Using Postman](https://www.postman.com/) send GET and POST request to the server. 
+
+## Exercise 2:
+Update sciprts so that POST request to novice, which adds a new news item responds in JSON format. Currently it only responds with status 200.
 
 
 
