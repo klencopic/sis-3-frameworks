@@ -219,7 +219,7 @@ const express = require('express')
 require('dotenv').config()
 ```
 
-9. Run the code as ussuall with *node index.js*
+9. Run the code as usual with *node index.js*
 
 ### The CRUD
 For this part, it's important that you understand the logic of the server and how it interacts with the routes and the database. One technique to do this is to read the code and sketch the app's flow.
