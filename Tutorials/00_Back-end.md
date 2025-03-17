@@ -173,6 +173,8 @@ npm install mysql2 dotenv
 6. Define a variable to hold the database connection:
 
 ```javascript
+const mysql = require('mysql2');
+
 const  conn = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
