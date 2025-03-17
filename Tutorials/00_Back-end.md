@@ -218,8 +218,6 @@ require('dotenv').config()
 ```
 
 9. Run the code as ussuall with *node index.js*
-- If everything is correct, you should be able to see the message "Connection established" in the console.
-- If not, double-check each step, ensure you're using the correct credentials and configurations, and verify that you've imported all required dependencies.
 
 ### The CRUD
 For this part, it's important that you understand the logic of the server and how it interacts with the routes and the database. One technique to do this is to read the code and sketch the app's flow.
