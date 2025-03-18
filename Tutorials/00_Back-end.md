@@ -466,12 +466,12 @@ users.post('/login', async (req, res) => {
                    else
                    {
                       console.log("INCORRECT PASSWORD");
-                      res.sendStatus(200)
+                      res.sendStatus(204)
                    }
                }else
                {
                   console.log("USER NOT REGISTRED");
-                  res.sendStatus(200)  
+                  res.sendStatus(204)  
                }
        }
        catch(err){
