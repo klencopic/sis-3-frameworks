@@ -419,7 +419,7 @@ novice.post('/', async (req,res, next)=>{
        }
        catch(err){
            console.log(err)
-           res.sendStatus(500)
+           res.status(500)
        }   
    } 
    else
@@ -461,28 +461,28 @@ users.post('/login', async (req, res) => {
                    {
                     console.log(queryResult)
                     console.log("LOGIN OK");
-                    res.sendStatus(200)
+                    res.status(200)
                    }
                    else
                    {
                       console.log("INCORRECT PASSWORD");
-                      res.sendStatus(204)
+                      res.status(204)
                    }
                }else
                {
                   console.log("USER NOT REGISTRED");
-                  res.sendStatus(204)  
+                  res.status(204)  
                }
        }
        catch(err){
            console.log(err)
-           res.sendStatus(500)
+           res.status(500)
        }   
    }
    else
    {
        console.log("Please enter Username and Password!")
-       res.sendStatus(204)
+       res.status(204)
    }
    res.end();
 });
