@@ -13,7 +13,7 @@ At this stage of the Lab Sessions, I assume that you already have experience wit
 
 To login use:
 USER_NAME: studenti
-PASSWORD: 12345678
+PASSWORD: s039c8r7
 
 ## NodeJS
 - Node enables developers to write JavaScript code that executes directly within a computer process, rather than within a web browser.
@@ -268,7 +268,7 @@ conn.connect((err) => {
 ```text
 DB_HOST=localhost
 DB_USER=studenti
-DB_PASS=12345678
+DB_PASS=s039c8r7
 DB_DATABASE=Qcodeigniter
 ```
 
