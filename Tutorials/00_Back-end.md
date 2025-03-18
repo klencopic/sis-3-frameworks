@@ -441,7 +441,7 @@ module.exports=novice
 ```javascript
 const express= require("express")
 const users = express.Router();
-const DB=require('../DB/dbConn.js')
+const DB=require('../db/dbConn.js')
 
 
 //Checks if user submitted both fields, if user exist and if the combination of user and password matches
