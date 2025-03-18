@@ -10,16 +10,6 @@ Welcome to the GitLab repository for Systems III - Frameworks. The purpose of th
 The content is divided into three main tutorials: back-end, front-end, and full-stack. Each tutorial focuses on developing essential components of a web application. During the lab sessions, we will guide you through these tutorials and complete a set of deliverables, which will be announced at the beginning of each session
 
 
-## Before start
-
-
-Before you start developing, it's important to address a few technical requirements:
-
-
-1. If you are using your own computer, make sure to set up the remote file system over SSH. If you're unsure how to do this, you can find tutorials in the e-classroom. If you can't find them there, you can access the instructions [here](./Tutorials/Set-up.pdf).
-
-
-
 ## Clarifications
 When using SSH, please note that we are NOT using the following command:
 
