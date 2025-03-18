@@ -16,9 +16,7 @@ The content is divided into three main tutorials: back-end, front-end, and full-
 Before you start developing, it's important to address a few technical requirements:
 
 
-1. Ensure that you have a GitLab account, which will allow you to create merge requests, branches, issues, and perform other GitLab-related tasks.
-2. If you are using your own computer, make sure to set up the remote file system over SSH. If you're unsure how to do this, you can find tutorials in the e-classroom. If you can't find them there, you can access the instructions [here](./Tutorials/Set-up.pdf).
-
+1. If you are using your own computer, make sure to set up the remote file system over SSH. If you're unsure how to do this, you can find tutorials in the e-classroom. If you can't find them there, you can access the instructions [here](./Tutorials/Set-up.pdf).
 
 
 
@@ -111,14 +109,9 @@ After receiving your email, I will promptly respond to confirm or suggest an alt
 [02. Full stack](./Tutorials/02_FullStack.md)
 
 
-## Video tutorial
-it is worth noting that the core idea of developing a Content Management System (CMS) remains the same. Some set of instructions might be different in the video tutorials, particularly the ones about branching. The video tutorials are just here as illustrative notes of what we do during lab sessions; feel free to check them and come with questions to the live session. (Obviously, I'm not a YouTube star, so I apologize in advance for any mispronunciations; but im sure you will be able to decode them).
-
-
-- <a href="https://www.youtube.com/playlist?list=PLa0X8b3FvpXNfO3z3fwbEqpJcq5-VyErx">VIDEOS</a>
 ## Resources
 External database (substitute this in your .env file)
 - DB_HOST=localhost
 - DB_USER=studenti
-- DB_PASS=12345678
+- DB_PASS=s039c8r7
 - DB_DATABASE=Qcodeigniter
