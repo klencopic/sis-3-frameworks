@@ -13,7 +13,7 @@ At this stage of the Lab Sessions, I assume that you already have experience wit
 
 To login use:
 USER_NAME: studenti
-PASSWORD: 12345678
+PASSWORD: s039c8r7
 
 ## NodeJS
 - Node enables developers to write JavaScript code that executes directly within a computer process, rather than within a web browser.
@@ -268,7 +268,7 @@ conn.connect((err) => {
 ```text
 DB_HOST=localhost
 DB_USER=studenti
-DB_PASS=12345678
+DB_PASS=s039c8r7
 DB_DATABASE=Qcodeigniter
 ```
 
@@ -419,7 +419,7 @@ novice.post('/', async (req,res, next)=>{
        }
        catch(err){
            console.log(err)
-           res.sendStatus(500)
+           res.status(500)
        }   
    } 
    else
@@ -441,7 +441,7 @@ module.exports=novice
 ```javascript
 const express= require("express")
 const users = express.Router();
-const DB=require('../DB/dbConn.js')
+const DB=require('../db/dbConn.js')
 
 
 //Checks if user submitted both fields, if user exist and if the combination of user and password matches
@@ -461,28 +461,28 @@ users.post('/login', async (req, res) => {
                    {
                     console.log(queryResult)
                     console.log("LOGIN OK");
-                    res.sendStatus(200)
+                    res.status(200)
                    }
                    else
                    {
                       console.log("INCORRECT PASSWORD");
-                      res.sendStatus(200)
+                      res.status(204)
                    }
                }else
                {
                   console.log("USER NOT REGISTRED");
-                  res.sendStatus(200)  
+                  res.status(204)  
                }
        }
        catch(err){
            console.log(err)
-           res.sendStatus(500)
+           res.status(500)
        }   
    }
    else
    {
        console.log("Please enter Username and Password!")
-       res.sendStatus(204)
+       res.status(204)
    }
    res.end();
 });
