@@ -267,9 +267,9 @@ conn.connect((err) => {
 
 ```text
 DB_HOST=localhost
-DB_USER=studenti
-USER_NAME: see e-classroom
-PASSWORD: see e-classroom
+DB_USER=see-eclassroom
+DB_PASS=see-eclassroom
+DB_DATABASE=Qcodeigniter
 ```
 
 
