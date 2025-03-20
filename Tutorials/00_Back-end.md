@@ -288,7 +288,7 @@ DB_DATABASE=Qcodeigniter
 //Basic packages
 const express = require('express')
 require('dotenv').config()
-const DB = require('./db/dbConn.js')
+const DB = require('./DB/dbConn.js')
 
 ```
 
