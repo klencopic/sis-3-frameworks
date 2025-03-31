@@ -103,5 +103,5 @@ After receiving your email, I will promptly respond to confirm or suggest an alt
 External database (substitute this in your .env file)
 - DB_HOST=localhost
 - DB_USER=studenti
-- DB_PASS=s039c8r7
+- DB_PASS=check e-classroom for passowrd!
 - DB_DATABASE=Qcodeigniter
