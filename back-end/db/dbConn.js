@@ -55,15 +55,5 @@ dataPool.AuthUser = (username) => {
 
 }
 
-dataPool.AddUser = (username, email, password) => {
-  return new Promise((resolve, reject) => {
-    conn.query(`INSERT INTO user_login (user_name,user_email,user_password) VALUES (?,?,?)`, [username, email, password], (err, res) => {
-      if (err) { return reject(err) }
-      return resolve(res)
-    })
-  })
-}
-
-
 module.exports = dataPool;
 
