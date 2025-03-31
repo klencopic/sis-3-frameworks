@@ -12,8 +12,8 @@ The web service will have an API which will enable one to:
 At this stage of the Lab Sessions, I assume that you already have experience with MySQL and phpMyAdmin. Therefore, we'll skip that part and empower you to create your own data models. You can access this databease through phpmyadmin: http://88.200.63.148/phpmyadmin. 
 
 To login use:
-USER_NAME: studenti
-PASSWORD: s039c8r7
+USER_NAME: see e-classroom
+PASSWORD: see e-classroom
 
 ## NodeJS
 - Node enables developers to write JavaScript code that executes directly within a computer process, rather than within a web browser.
@@ -267,8 +267,8 @@ conn.connect((err) => {
 
 ```text
 DB_HOST=localhost
-DB_USER=studenti
-DB_PASS=s039c8r7
+DB_USER=see-eclassroom
+DB_PASS=see-eclassroom
 DB_DATABASE=Qcodeigniter
 ```
 
@@ -288,7 +288,7 @@ DB_DATABASE=Qcodeigniter
 //Basic packages
 const express = require('express')
 require('dotenv').config()
-const DB = require('./db/dbConn.js')
+const DB = require('./DB/dbConn.js')
 
 ```
 
@@ -441,7 +441,7 @@ module.exports=novice
 ```javascript
 const express= require("express")
 const users = express.Router();
-const DB=require('../db/dbConn.js')
+const DB=require('../DB/dbConn.js')
 
 
 //Checks if user submitted both fields, if user exist and if the combination of user and password matches
