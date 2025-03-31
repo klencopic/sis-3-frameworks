@@ -45,31 +45,6 @@ users.post('/login', async (req, res) => {
 
 
 // Inserts a new user in our database
-users.post('/register', async (req, res, next) => {
-    try {
-        const username = req.body.username
-        const password = req.body.password
-        const email = req.body.email
-        if (username && password && email) {
-            const queryResult = await DB.AddUser(username, email, password);
-            if (queryResult.affectedRows) {
-                console.log("New user added!")
-                res.status(200)
-                res.json({ success: true, message: "New user added!" });
-            }
-        }
-        else {
-            console.log("A field is missing!")
-            res.status(200)
-            res.json({ success: false, message: "A field is missing!" });
-        }
-        res.end();
-    } catch (err) {
-        console.log(err)
-        res.json({ success: false, message: err });
-        res.sendStatus(500)
-        next()
-    }
-});
+
 
 module.exports = users
