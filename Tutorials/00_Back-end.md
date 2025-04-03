@@ -187,6 +187,7 @@ module.exports=novice
 
 ```javascript
 //Import our custom modules-controllers
+app.use(express.json());
 const novice= require("./routes/novice")
 //Routes
 app.use('/novice', novice);
