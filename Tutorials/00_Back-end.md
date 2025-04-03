@@ -83,7 +83,7 @@ npm install express
 ```
 
 
-4. In the root of this project, create a javascript empty file, by convention you should name it **index.js** but it doesn't really matter.
+4. In the root of this project create a javascript empty file. By convention you should name it **index.js** but it doesn't really matter.
 
 
 5. Open your **index.js**  in your favorite IDE and in the first line import the recently installed dependency at the top:
@@ -110,13 +110,11 @@ const app = express()
 
 
 ```javascript
-const port = 
-
+const port = 5000 //Specify your own port here!!!
 
 app.get("/",(req,res)=>{
 res.send("hola")
 })
-
 
 ///App listening on port
 app.listen(process.env.PORT || port, ()=>{
@@ -127,7 +125,7 @@ console.log(`Server is running on port: ${process.env.PORT || port}`)
 
 - First, we choose the port we want the server to listen on and declare it as *const port*.
 - In the app.get method, we specify two parameters. The first one defines the route the server expects, in this case, "/", which means "http://ADDRESS:PORT/". The second one is a callback function to handle the request and response. This is similar to what we did when creating the simple server. In this case, if someone visits the URL "http://ADDRESS:PORT/, we'll send the string "hola" to the browser.
-- Finally,  in *app.listen*, we instruct our server to start listening on a specific port.
+- Finally,  in *app.listen*, we instruct our server to start listening on a specific port. Make sure to specify your own port here!
 
 
 8. Save the file and in the console, run:
@@ -138,7 +136,7 @@ node index.js
 ```
 
 
-- If everything is correct, you should see the message "hola" in your browser.
+- If everything is correct, you should see the message "hola" in your browser if you visit http://ADDRESS:PORT/.
 - We could write all our logic in this ***index.js*** file, but at some point it's gona become messy so let's instead create some *routes* in different files using the power of *ExpressJS*.
 
 
@@ -287,7 +285,6 @@ DB_DATABASE=Qcodeigniter
 
 ```javascript
 //Basic packages
-const express = require('express')
 require('dotenv').config()
 const DB = require('./DB/dbConn.js')
 
@@ -400,9 +397,12 @@ novice.get('/:id', async (req,res, next)=>{
    }
 })
 
+var bodyParser = require('body-parser')
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 //Inserts one new item to the database
-novice.post('/', async (req,res, next)=>{
+novice.post('/', urlencodedParser, async (req,res, next)=>{
       
  let title = req.body.title
  let slug = req.body.slug
