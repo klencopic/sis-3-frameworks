@@ -79,7 +79,7 @@ npm init
 
 
 ```console
-npm install express --save
+npm install express
 ```
 
 
