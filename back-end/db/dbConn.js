@@ -31,7 +31,7 @@ dataPool.allNovice = () => {
 
 dataPool.allUsers = () => {
   return new Promise((resolve, reject) => {
-    conn.query(`SELECT user_name FROM users`, (err, res) => {
+    conn.query(`SELECT user_name FROM user_login`, (err, res) => {
       if (err) { return reject(err) }
       return resolve(res)
     })
