@@ -1073,7 +1073,7 @@ Run:
 npm run dev
 ```
 
-You can use Postman, Insomnia, curl or a frontend application to test your API.
+You can use https://www.postman.com/, https://hoppscotch.io/, curl or a frontend application to test your API.
 
 ---
 
@@ -1150,9 +1150,9 @@ JSON body:
 
 # Exercises
 
-## Exercise 1: Test the existing API with Postman
+## Exercise 1: Test the existing API with https://www.postman.com/ or https://hoppscotch.io/
 
-Using Postman, test the following endpoints:
+Using Postman or hoppscotch, test the following endpoints:
 
 ```text
 GET http://ADDRESS:PORT/news
