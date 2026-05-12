@@ -522,6 +522,35 @@ You should see:
 Hello from Express 5 and TypeScript
 ```
 
+If you recieve an error similar to this:
+```text
+node:events:486
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 88.200.63.148:5000
+    at Server.setupListenHandle [as _listen2] (node:net:1948:16)
+    at listenInCluster (node:net:2005:12)
+    at node:net:2214:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1984:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -98,
+  syscall: 'listen',
+  address: '88.200.63.148',
+  port: 5000
+}
+
+Node.js v24.14.1
+```
+
+You are faced with a port in use problem. Only one service can run on any given port. To resolve this problem go to port list:
+https://docs.google.com/spreadsheets/d/1HRiWAmrBMDFY4kNgbBRplCUtS3eWDqN0T2xJXkLS3kE/edit?usp=sharing
+
+and reserve a port for you and use it from now onwards. If it stops working, just go and get another port for you. There are plenty. You can have as many ports as you would like.
+
 ---
 
 ## The routes
@@ -629,6 +658,7 @@ You should see:
 ```text
 novice
 ```
+
 
 ---
 
