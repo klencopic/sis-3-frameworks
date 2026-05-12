@@ -690,8 +690,6 @@ const pool = mysql.createPool({
 export default pool;
 ```
 
-In this updated version, we use `mysql2/promise`. This lets us use `async` and `await` without manually wrapping every query in a `new Promise`.
-
 ### 3. Create the `.env` file
 
 In the root of the `back-end` folder, create a file named `.env`:
