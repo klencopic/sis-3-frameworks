@@ -54,9 +54,13 @@ For example:
 
 ```console
 node index.js
+
+or 
+
+npm run dev
 ```
 
-This command works only if you run it from the directory where `index.js` is located.
+This command works only if you run it from the correct directory where `index.js` or `package.json` is located.
 
 If the file is inside another folder, you must either move to that folder first or provide the correct path to the file.
 
