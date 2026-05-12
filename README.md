@@ -1,107 +1,161 @@
-# Systems III
-*Created for educational purposes
+# Systems III – Frameworks
 
+*Created for educational purposes.*
 
+Welcome to the GitLab repository for **Systems III – Frameworks**.
 
+This repository contains supporting materials for the laboratory sessions. Its purpose is to help you become familiar with web technologies commonly used in modern web development.
 
-Welcome to the GitLab repository for Systems III - Frameworks. The purpose of this repository is to provide you with supporting materials to help you become familiar with various web technologies commonly used in modern web development.
+The material is divided into three main tutorials:
 
+- **Back-end**
+- **Front-end**
+- **Full-stack**
 
-The content is divided into three main tutorials: back-end, front-end, and full-stack. Each tutorial focuses on developing essential components of a web application. During the lab sessions, we will guide you through these tutorials and complete a set of deliverables, which will be announced at the beginning of each session
+Each tutorial focuses on one part of a web application. During the lab sessions, we will work through these tutorials step by step and complete a set of deliverables. The deliverables will be announced at the beginning of each session.
 
+---
 
 ## Clarifications
-When using SSH, please note that we are NOT using the following command:
 
+### SSH connection
 
+When using SSH, please note that we are **not** using the following command:
+
+```console
+ssh <enrolment_num>@www.studenti.famnit.upr.si
 ```
-$ ssh <enrolment_num>@www.studenti.famnit.upr.si
-```
-Instead, we will connect to the following Virtual Machine:
 
+Instead, we will connect to the following virtual machine:
 
+```console
+ssh <enrolment_num>@88.200.63.148
 ```
-$ ssh <enrolment_num>@88.200.63.148
-```
-It's crucial to make this distinction as these two connections have different versions of software. For the purposes of these tutorials, it is more convenient to use 88.200.63.148.
 
+This distinction is important because the two environments may have different software versions installed. For the purposes of these tutorials, we will use:
+
+```text
+88.200.63.148
+```
+
+---
 
 ## Troubleshooting
 
+As your teaching assistant, I am here to help you with technical difficulties. However, before asking for help, please go through the checklist below.
 
-As your teaching assistant, I'm here to assist you with any technical difficulties you may encounter. However, before reaching out to me for help, please consider going through this checklist:
+---
 
+### General checklist
 
-### General
-#### Are you running the command with the proper arguments? For instance:
+#### 1. Are you running the command from the correct directory?
 
+For example:
 
+```console
+node index.js
 ```
-$ node index.js
-```
-This command will execute successfully only if you've invoked it in the directory where the 'index.js' file is located. I won't go into further detail on this matter since you've already covered it in Computer Practicum I.
 
+This command works only if you run it from the directory where `index.js` is located.
 
-#### Are you running your script in the correct instance?
-Keep in mind that we're working with a remote virtual machine, so it's crucial to confirm that you're executing commands via the SSH connection. You can usually distinguish this terminal from any others you may have open by checking the terminal prompt, which should resemble one of the following:
-```
+If the file is inside another folder, you must either move to that folder first or provide the correct path to the file.
+
+---
+
+#### 2. Are you running your command in the correct environment?
+
+In this course, we often work on a remote virtual machine. Make sure that you are executing commands inside the SSH session, not only on your local computer.
+
+You can usually recognize the SSH terminal by checking the terminal prompt. It should look similar to one of the following:
+
+```console
 89183001@studenti2:~$
 ```
-or
-```
+
+or:
+
+```console
 89183001@88.200.63.148:~$
 ```
 
+---
 
-#### Have you installed the project dependencies?
-In Node.js, every project includes a vital configuration file named package.json. This file serves as the central hub for managing and defining the attributes of a Node.js project. It contains essential metadata about the project, encompassing details such as its name, version, dependencies, and various other configurations. Let's delve into what you'd typically encounter within this file.
+#### 3. Have you installed the project dependencies?
 
+In Node.js projects, dependencies are defined in the `package.json` file.
 
-After pulling a project from a Git repository, it's usually necessary to install the local Node.js dependencies. This step is crucial because these dependencies might have been updated in another branch. Additionally, it's common practice to include the node_modules folder in the .gitignore file to avoid storing these dependencies in version control.
-The command to install the dependencies is:
+After cloning or pulling a project from Git, you usually need to install the dependencies locally. This is necessary because the `node_modules` folder is normally not stored in Git. It is usually listed in `.gitignore`.
 
+To install dependencies, run:
 
-```
+```console
 npm install
 ```
-This command should be executed in the same directory where the package.json file is located.
 
+Run this command in the same directory where `package.json` is located.
 
-#### Why I get connection refused from my database
-Ensure that you have correctly configured the credentials in the .env configuration file. If you still encounter connection refusal issues even after correctly setting the credentials, double-check that the server is running exclusively on the virtual machine and nowhere else. You may want to review the previous steps to confirm the setup.
+---
 
+#### 4. Why do I get “connection refused” from my database?
 
-#### Server is running, database is connected but no data can be fetched in the front-end
-Verify that you are making the correct calls to valid endpoints, and ensure that you have enabled CORS on the server.
+Check that your database credentials are correctly configured in the `.env` file.
 
+Also make sure that:
 
-Finally, If you've reached this sentence, it likely means that your issue persists, and neither Google nor Chat GPT has been able to provide a solution. Unfortunately, I don't like to write/exchange multiple messages via email, so please follow these steps to get assistance:
+- the database server is accessible from the environment where your back-end is running;
+- you are running the back-end server on the correct machine;
+- your `.env` file contains the correct database host, user, password and database name;
+- your code actually loads the `.env` file.
 
+---
 
-- Your name
-- Yout issue (elaborate)
-- Evidence (video-pictures, did you follow the Troubleshooting guide, right?)
-- Three options for a online meeting. e.g Friday 28th, at 20:00
+#### 5. The server is running and the database is connected, but the front-end cannot fetch data
 
+Check the following:
 
-After receiving your email, I will promptly respond to confirm or suggest an alternative time for the meeting. Your cooperation in providing detailed information will help us resolve your technical difficulties more efficiently.
+- Are you calling the correct API endpoint?
+- Is the back-end server running on the expected address and port?
+- Is the route implemented in the back-end?
+- Is the HTTP method correct, for example `GET`, `POST`, `PUT` or `DELETE`?
+- Is CORS enabled on the server if your front-end and back-end run on different origins?
 
+---
+
+## Asking for help
+
+If your issue persists after following the troubleshooting checklist, you may contact the teaching assistant.
+
+To make the support process more efficient, include the following information in your message:
+
+- your name;
+- a clear description of the issue;
+- the exact command you ran;
+- the full error message;
+- screenshots or a short video, if useful;
+- confirmation that you followed the troubleshooting checklist;
+- three possible time slots for an online meeting, for example: Friday, 28 March, at 20:00.
+
+After receiving your message, I will confirm one of the proposed times or suggest an alternative.
+
+---
 
 ## Tutorials
 
+- [00. Back-end](./Tutorials/00_Back-end.md)
+- [01. Front-end](./Tutorials/01_Front-end.md)
+- [02. Full-stack](./Tutorials/02_FullStack.md)
 
-[00. Back-end](./Tutorials/00_Back-end.md)
-
-
-[01. Front-end](./Tutorials/01_Front-end.md)
-
-
-[02. Full stack](./Tutorials/02_FullStack.md)
-
+---
 
 ## Resources
-External database (substitute this in your .env file)
-- DB_HOST=localhost
-- DB_USER=studenti
-- DB_PASS=check e-classroom for passowrd!
-- DB_DATABASE=Qcodeigniter
+
+### External database configuration
+
+Use the following database configuration in your `.env` file:
+
+```text
+DB_HOST=localhost
+DB_USER=studenti
+DB_PASS=check e-classroom for password
+DB_DATABASE=frameworks_tutorial
+```
