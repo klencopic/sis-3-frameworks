@@ -342,7 +342,7 @@ This tutorial is divided into four steps:
 
 - [The server](#the-server)
 - [The routes](#the-routes)
-- [The DB](#the-db)
+- [The database](#the-database)
 - [The CRUD](#the-crud)
 
 Please follow these steps in order.
@@ -439,6 +439,18 @@ mkdir src
 ```
 
 Inside `src`, create a file named `index.ts`.
+
+Later in the tutorial, the project will use this structure:
+
+```text
+src/
+├── db/
+│   └── database.ts
+├── routes/
+│   ├── news.routes.ts
+│   └── users.routes.ts
+└── index.ts
+```
 
 ### 7. Create the Express server
 
@@ -640,24 +652,25 @@ You should see:
 news
 ```
 
+If you get this error, it is very likely that the selected port is already being used by another service.
 
 ---
 
-## The DB
+## The database
 
 Now we will establish a connection with the MySQL database.
 
-### 1. Create the DB folder
+### 1. Create the database folder
 
-Inside `src`, create a folder named `DB`:
+Inside `src`, create a folder named `db`:
 
 ```console
-mkdir src/DB
+mkdir src/db
 ```
 
 ### 2. Create the database connection file
 
-Inside `src/DB`, create a file named `dbConn.ts`.
+Inside `src/db`, create a file named `database.ts`.
 
 Add this code:
 
@@ -726,7 +739,7 @@ Now we will add Create, Read, Update and Delete-style database operations. In th
 
 ### 1. Add database helper functions
 
-Replace the content of `src/DB/dbConn.ts` with this:
+Replace the content of `src/db/database.ts` with this:
 
 ```ts
 import mysql, { ResultSetHeader, RowDataPacket } from "mysql2/promise";
@@ -811,7 +824,7 @@ Replace the content of `src/routes/news.routes.ts` with this:
 
 ```ts
 import { Request, Response, NextFunction, Router } from "express";
-import { allNews, createNewsItem, oneNewsItem } from "../DB/dbConn.js";
+import { allNews, createNewsItem, oneNewsItem } from "../db/database.js";
 
 const router = Router();
 
@@ -908,7 +921,7 @@ Add this code:
 
 ```ts
 import { Request, Response, NextFunction, Router } from "express";
-import { authUser, createUser } from "../DB/dbConn.js";
+import { authUser, createUser } from "../db/database.js";
 
 const router = Router();
 
@@ -1245,7 +1258,7 @@ DELETE http://ADDRESS:PORT/news/:id
 
 The endpoint should delete one news item from the `news` table based on its `id`.
 
-Add a new database function in `dbConn.ts`.
+Add a new database function in `src/db/database.ts`.
 
 Example SQL:
 
@@ -1293,7 +1306,7 @@ PUT http://ADDRESS:PORT/news/:id
 
 The endpoint should update the `title`, `slug` and `text` of an existing news item.
 
-Add a new database function in `dbConn.ts`.
+Add a new database function in `src/db/database.ts`.
 
 Example SQL:
 
