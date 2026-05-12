@@ -51,6 +51,31 @@ export const createNewsItem = async (
   return result;
 };
 
+export const updateNewsItem = async (
+  id: string,
+  title: string,
+  slug: string,
+  text: string
+): Promise<ResultSetHeader> => {
+  const [result] = await pool.query<ResultSetHeader>(
+    "UPDATE news SET title = ?, slug = ?, text = ? WHERE id = ?",
+    [title, slug, text, id]
+  );
+
+  return result;
+};
+
+export const deleteNewsItem = async (
+  id: string
+): Promise<ResultSetHeader> => {
+  const [result] = await pool.query<ResultSetHeader>(
+    "DELETE FROM news WHERE id = ?",
+    [id]
+  );
+
+  return result;
+};
+
 export const authUser = async (username: string): Promise<UserLogin[]> => {
   const [rows] = await pool.query<UserLogin[]>(
     "SELECT * FROM user_login WHERE user_name = ?",

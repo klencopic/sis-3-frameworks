@@ -9,10 +9,13 @@ const loginUser = async (
   next: NextFunction
 ) => {
   try {
-    const { username, password } = req.body as {
+    let { username, password } = req.body as {
       username?: string;
       password?: string;
     };
+
+    username = username?.trim();
+    password = password?.trim();
 
     if (!username || !password) {
       res.status(400).json({
@@ -65,11 +68,15 @@ const registerUser = async (
   next: NextFunction
 ) => {
   try {
-    const { username, email, password } = req.body as {
+    let { username, email, password } = req.body as {
       username?: string;
       email?: string;
       password?: string;
     };
+
+    username = username?.trim();
+    email = email?.trim();
+    password = password?.trim();
 
     if (!username || !email || !password) {
       res.status(400).json({
