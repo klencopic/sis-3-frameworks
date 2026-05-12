@@ -1,554 +1,1214 @@
-# Back-end using MySQL, NodeJS and Express
+# Back-end using MySQL, Node.js, Express 5 and TypeScript
 
-The aim of this tutorial is to create a simple web service that uses MySQL database to store data.
-The web service will have an API which will enable one to:
+The aim of this tutorial is to create a simple web service that uses a MySQL database to store data.
+
+The web service will have an API which enables us to:
+
 - retrieve a list of existing news items;
+- retrieve one news item by id;
 - add a new news item;
 - register a new user;
-- login(authenticate) an existing user;
+- login/authenticate an existing user.
 
-## MySQL
+This updated version of the tutorial uses:
 
-At this stage of the Lab Sessions, I assume that you already have experience with MySQL and phpMyAdmin. Therefore, we'll skip that part and empower you to create your own data models. You can access this databease through phpmyadmin: http://88.200.63.148/phpmyadmin. 
+- **TypeScript** instead of plain JavaScript;
+- **ES Modules** using `import` / `export` instead of CommonJS `require()` / `module.exports`;
+- **function-based routing** instead of class-based controllers;
+- **Express 5**.
 
-To login use:
+---
+
+## 1. JavaScript and TypeScript
+
+### JavaScript
+
+JavaScript is the language that Node.js executes. A simple JavaScript variable looks like this:
+
+```js
+const username = "ana";
+```
+
+JavaScript does not require us to declare the type of `username`. The type is checked only while the program is running.
+
+### TypeScript
+
+TypeScript is JavaScript with added type annotations. A similar TypeScript variable looks like this:
+
+```ts
+const username: string = "ana";
+```
+
+The `: string` part tells TypeScript that `username` should contain text.
+
+TypeScript helps us catch mistakes before running the server. For example:
+
+```ts
+function greet(name: string) {
+  return `Hello, ${name}`;
+}
+
+greet("Ana"); // OK
+greet(123);   // TypeScript error
+```
+
+TypeScript is especially useful in back-end applications because we can type:
+
+- request parameters;
+- request bodies;
+- database rows;
+- function return values;
+- middleware functions;
+- environment variables.
+
+Important: TypeScript still becomes JavaScript before or during execution. In this tutorial we use TypeScript during development and compile it to JavaScript for production.
+
+---
+
+## 2. CommonJS and ES Modules
+
+Older Node.js tutorials often use **CommonJS**:
+
+```js
+const express = require("express");
+
+module.exports = router;
+```
+
+Modern JavaScript and TypeScript projects commonly use **ES Modules**:
+
+```ts
+import express from "express";
+
+export default router;
+```
+
+In this tutorial we use ES Modules.
+
+To tell Node.js that this project uses ES Modules, we add this to `package.json`:
+
+```json
+{
+  "type": "module"
+}
+```
+
+---
+
+## 3. Class-based routing and function-based routing
+
+Some older tutorials organize routes using classes.
+
+### Older class-based style
+
+```ts
+import { Request, Response, NextFunction, Router } from "express";
+
+class UserController {
+  async getUserById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+
+      res.json({
+        id,
+        name: "Example User",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+}
+
+const controller = new UserController();
+const router = Router();
+
+router.get("/users/:id", controller.getUserById.bind(controller));
+
+export default router;
+```
+
+This works, but students also need to understand `this` and `.bind(controller)`.
+
+### New function-based style used in this tutorial
+
+```ts
+import { Request, Response, NextFunction, Router } from "express";
+
+const router = Router();
+
+const getUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+
+    res.json({
+      id,
+      name: "Example User",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.get("/users/:id", getUserById);
+
+export default router;
+```
+
+In function-based routing, each route handler is an ordinary function. This is usually easier to read, test and reuse in small and medium Express projects.
+
+---
+
+## 4. MySQL
+
+At this stage of the lab sessions, I assume that you already have experience with MySQL and phpMyAdmin. Therefore, we will skip the database creation part and focus on connecting our Express server to the database.
+
+You can access the database through phpMyAdmin:
+
+```text
+http://88.200.63.148/phpmyadmin
+```
+
+Login credentials:
+
+```text
 USER_NAME: see e-classroom
 PASSWORD: see e-classroom
+```
 
-## NodeJS
-- Node enables developers to write JavaScript code that executes directly within a computer process, rather than within a web browser.
-- Node provides access to several crucial global objects for use within Node program files, including modules, require, and process.
-- Node offers a wide array of built-in modules that simplify interactions with the command line, the computer's file system, and the internet.
-- Node empowers you with the capability to install packages developed by other developers.
+In this tutorial, examples assume the following tables already exist:
 
+- `news`
+- `user_login`
 
-[More info](https://www.codecademy.com/articles/what-is-node)
+Example `news` table columns:
 
+```text
+id
+title
+slug
+text
+```
+
+Example `user_login` table columns:
+
+```text
+id
+user_name
+user_email
+user_password
+```
+
+---
+
+## 5. Node.js
+
+Node.js enables developers to write JavaScript or TypeScript-based server-side applications that run outside the web browser.
+
+Node.js provides:
+
+- access to the file system;
+- access to network functionality;
+- a package manager ecosystem through npm;
+- built-in modules;
+- the ability to run server-side applications.
 
 ### Installation
 
+Install Node.js from the official Node.js website.
 
-[Official instructions](https://nodejs.org/en/)
+After installation, check your version:
 
+```console
+node --version
+npm --version
+```
 
-## Express.js
+For this tutorial, use a recent Node.js version that supports modern TypeScript and ESM workflows.
 
+---
 
-### What is Express
+## 6. Express 5
 
+Express is a minimalist web framework for Node.js.
 
-- Express is a middleware that helps us to deal with server-side logic for web and mobile applications
-- It's easy to use and plays along with many other frameworks, such as react, mongo,angular, etc.
-- It's javascript :)
+It helps us define:
 
+- routes;
+- middleware;
+- API endpoints;
+- request and response handling;
+- error handling.
 
-## Creating a NodeJs + Express.js server
+This tutorial uses **Express 5**.
 
+Important Express 5 notes used in this tutorial:
 
-We'll dive into ExpressJS by building something practical. In this case, we'll replicate the functionality of your codeigniter project. This tutorial is divided into four steps:
+- use `express.json()` for JSON request bodies;
+- use `express.urlencoded()` for form submissions;
+- use `res.status(201).json(...)` instead of older response signatures;
+- async route handlers are supported, and rejected promises are passed to error handling middleware.
 
+---
+
+# Creating a Node.js + Express 5 + TypeScript server
+
+This tutorial is divided into four steps:
 
 - [The server](#the-server)
 - [The routes](#the-routes)
 - [The DB](#the-db)
 - [The CRUD](#the-crud)
 
-
 Please follow these steps in order.
 
+---
 
-### The server
+## The server
 
+### 1. Create the back-end folder
 
-1. Clone this [repository](https://gitlab.com/klen.copic/sis-3-frameworks.git) and create a folder at the root level and name it *back-end* (short for Content Managment System) at the root level.
+Clone the repository provided for the course and create a folder named `back-end` at the root level.
 
-
-2. Navigate inside the folder and run the command
-
-
-```console
-npm init
-```
-
-
-- By pressing enter everytime console prompts, you will keep the default values if you don't modify the entries
-- The outcome of this operation will be a file named *package.json* that contains the basic information of our NodeJS project, particularlly, the packages/dependecies that we have installed so far, none.
-
-
-3. Install your first dependency by running the command:
-
+Move into the folder:
 
 ```console
-npm install express
+cd back-end
 ```
 
+### 2. Initialize the Node.js project
 
-4. In the root of this project create a javascript empty file. By convention you should name it **index.js** but it doesn't really matter.
-
-
-5. Open your **index.js**  in your favorite IDE and in the first line import the recently installed dependency at the top:
-
-
-```javascript
-const express = require('express')
-```
-
-
-- Note that in newer versions of JavaScript, you don't need to end statements with semicolons. :)
-- If you're not familiar with JavaScript variable declaration, you can review this article:  <https://www.freecodecamp.org/news/var-let-and-const-whats-the-difference/>
-
-
-6. Create an instace of *ExpressJS* like this.
-
-
-```javascript
-const app = express()
-```
-
-
-7. Create a simple route for the server and assign a port to listen on:
-
-
-```javascript
-const port = 5000 //Specify your own port here!!!
-
-app.get("/",(req,res)=>{
-res.send("hola")
-})
-
-///App listening on port
-app.listen(process.env.PORT || port, ()=>{
-console.log(`Server is running on port: ${process.env.PORT || port}`)
-})
-```
-
-
-- First, we choose the port we want the server to listen on and declare it as *const port*.
-- In the app.get method, we specify two parameters. The first one defines the route the server expects, in this case, "/", which means "http://ADDRESS:PORT/". The second one is a callback function to handle the request and response. This is similar to what we did when creating the simple server. In this case, if someone visits the URL "http://ADDRESS:PORT/, we'll send the string "hola" to the browser.
-- Finally,  in *app.listen*, we instruct our server to start listening on a specific port. Make sure to specify your own port here!
-
-
-8. Save the file and in the console, run:
-
+Run:
 
 ```console
-node index.js
+npm init -y
 ```
 
+This creates a `package.json` file.
 
-- If everything is correct, you should see the message "hola" in your browser if you visit http://ADDRESS:PORT/.
-- We could write all our logic in this ***index.js*** file, but at some point it's gona become messy so let's instead create some *routes* in different files using the power of *ExpressJS*.
+### 3. Install dependencies
 
-
-### The routes
-
-
-1. Inside your *back-end* folder create a new folder and name it: *routes*.
-
-
-2. Inside *routes* folder create an empty javascript document and name it: *novice.js*.
-
-
-3. In the *novice.js* file, import *express* and then create an instance of *express.Router*
-
-
-```javascript
-const express= require("express")
-const novice = express.Router();
-```
-
-
-- We will see how it work once we define our first route
-
-
-5. Create a route that points to *"/"*
-
-
-```javascript
-novice.get('/',(req,res)=>{
-console.log("The route has been reached")
-res.send("novice")
-})
-```
-
-
-6. Export your module so it can be called from other script by putting at the end of the code.
-
-
-```javascript
-module.exports=novice
-```
-
-
-7. In **index.js**, import **novice.js** and then use it like this.
-
-
-```javascript
-//Import our custom modules-controllers
-const novice= require("./routes/novice")
-//Routes
-app.use('/novice', novice);
-```
-
-
-8. Save the file and in the console, run:
-
+Install runtime dependencies:
 
 ```console
-node path/to/your/index.js
+npm install express mysql2 dotenv
 ```
 
-
-9. In the browser visit *http://ADDRESS:PORT/novice
-
-
-- If you've followed each step so far, you should see a message in the console and the string "novice" in the browser.
-- The next step in this tutorial is to consume information from the database you created in your codeigniter project. So, every time a user visits a specific endpoint, such as http://ADDRESS:PORT/novice, we retrieve news from the database.
-- The idea for the next steps is: i) establish a connection with the database, and then ii) create our own CRUD operations.
-
-
-### The DB
-
-
-1. In the root of our back-end project, create a folder and name it DB.
-
-
-2. Inside the DB folder, create an empty file and name it  **dbConn.js**
-
-
-3. Install the following dependencies:
-
+Install development dependencies:
 
 ```console
-npm install mysql2 dotenv
+npm install --save-dev typescript tsx @types/node @types/express
 ```
 
+Explanation:
 
-- The first one (mysql2) is a dependency that will help us manage the connection to the database, and the second one (dotenv) is used to securely store our database information.
+- `express` is the web framework;
+- `mysql2` is used to connect to MySQL;
+- `dotenv` loads environment variables from a `.env` file;
+- `typescript` enables TypeScript;
+- `tsx` lets us run TypeScript files during development;
+- `@types/node` provides Node.js types;
+- `@types/express` provides Express types.
 
+### 4. Configure TypeScript
 
-4. In **DBConn.js**, import *ExpresJS*, just as in step **5** of **The server**
+Create a file named `tsconfig.json`:
 
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"]
+}
+```
 
-6. Define a variable to hold the database connection:
+### 5. Update `package.json`
 
+Edit your `package.json` so it contains:
 
-```javascript
-const mysql = require('mysql2');
+```json
+{
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  }
+}
+```
 
+You do not need to copy this whole file if your `package.json` already contains other fields. Add or update only these parts:
 
-const  conn = mysql.createConnection({
-   host: process.env.DB_HOST,
-   user: process.env.DB_USER,
-   password: process.env.DB_PASS,
-   database: 'Qcodeigniter',
- })
+```json
+{
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  }
+}
+```
 
+### 6. Create the source folder
 
-conn.connect((err) => {
-     if(err){
-         console.log("ERROR: " + err.message);
-         return;   
-     }
-     console.log('Connection established');
-   })
- ```
+Create the project structure:
 
+```console
+mkdir src
+```
 
-- In your case the value of the *database* key must match the exact name of your database.
-- In the next step we will define the *host*, *user* and *password*.
-- You may have noticed that I've included a block of code provisionally to check if the connection to the database was successful. For now, let's just save it.
+Inside `src`, create a file named `index.ts`.
 
+### 7. Create the Express server
 
-7. In the back-end folder, create a file a name it *.env*, open it and write:
+Add this code to `src/index.ts`:
 
+```ts
+import "dotenv/config";
+import express, { Request, Response, NextFunction } from "express";
+
+const app = express();
+const port = Number(process.env.PORT) || 5000;
+
+// Middleware for JSON request bodies
+app.use(express.json());
+
+// Middleware for HTML form submissions
+app.use(express.urlencoded({ extended: false }));
+
+app.get("/", (_req: Request, res: Response) => {
+  res.send("Hello from Express 5 and TypeScript");
+});
+
+// Central error handler
+app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  console.error(error);
+
+  res.status(500).json({
+    success: false,
+    message: "Internal server error",
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port: ${port}`);
+});
+```
+
+### 8. Run the development server
+
+Run:
+
+```console
+npm run dev
+```
+
+Visit:
 
 ```text
+http://ADDRESS:PORT/
+```
+
+For example, if you run the server locally on port `5000`, visit:
+
+```text
+http://localhost:5000/
+```
+
+You should see:
+
+```text
+Hello from Express 5 and TypeScript
+```
+
+---
+
+## The routes
+
+We could write all logic in `index.ts`, but the file would quickly become messy. Instead, we will separate routes into different files.
+
+### 1. Create the routes folder
+
+Inside `src`, create a folder named `routes`:
+
+```console
+mkdir src/routes
+```
+
+### 2. Create the news route file
+
+Inside `src/routes`, create a file named `novice.routes.ts`.
+
+Add this code:
+
+```ts
+import { Request, Response, NextFunction, Router } from "express";
+
+const router = Router();
+
+const getAllNovice = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    console.log("The /novice route has been reached");
+    res.send("novice");
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.get("/", getAllNovice);
+
+export default router;
+```
+
+### 3. Connect the route to the server
+
+Update `src/index.ts`:
+
+```ts
+import "dotenv/config";
+import express, { Request, Response, NextFunction } from "express";
+import noviceRouter from "./routes/novice.routes.js";
+
+const app = express();
+const port = Number(process.env.PORT) || 5000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.get("/", (_req: Request, res: Response) => {
+  res.send("Hello from Express 5 and TypeScript");
+});
+
+// Routes
+app.use("/novice", noviceRouter);
+
+// Central error handler
+app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  console.error(error);
+
+  res.status(500).json({
+    success: false,
+    message: "Internal server error",
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port: ${port}`);
+});
+```
+
+Notice this import:
+
+```ts
+import noviceRouter from "./routes/novice.routes.js";
+```
+
+Even though the file is named `novice.routes.ts`, we use `.js` in the import path because TypeScript will compile the file to JavaScript in the `dist` folder.
+
+### 4. Test the route
+
+Run:
+
+```console
+npm run dev
+```
+
+Visit:
+
+```text
+http://ADDRESS:PORT/novice
+```
+
+You should see:
+
+```text
+novice
+```
+
+---
+
+## The DB
+
+Now we will establish a connection with the MySQL database.
+
+### 1. Create the DB folder
+
+Inside `src`, create a folder named `DB`:
+
+```console
+mkdir src/DB
+```
+
+### 2. Create the database connection file
+
+Inside `src/DB`, create a file named `dbConn.ts`.
+
+Add this code:
+
+```ts
+import mysql from "mysql2/promise";
+
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_DATABASE,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+
+export default pool;
+```
+
+In this updated version, we use `mysql2/promise`. This lets us use `async` and `await` without manually wrapping every query in a `new Promise`.
+
+### 3. Create the `.env` file
+
+In the root of the `back-end` folder, create a file named `.env`:
+
+```text
+PORT=5000
 DB_HOST=localhost
 DB_USER=see-eclassroom
 DB_PASS=see-eclassroom
 DB_DATABASE=Qcodeigniter
 ```
 
+Important: replace the values with your actual database settings.
 
-- We want to keep this information private and not expose it in your repository, so let's also create a *.gitignore* file in the back-end folder and simply put:
+### 4. Create `.gitignore`
 
+In the root of the `back-end` folder, create a file named `.gitignore`:
 
 ```text
 .env
+dist
+node_modules
 ```
 
+We do not want to upload database passwords, compiled files or installed packages to the repository.
 
-8. Finally to test if it works, go to  **index.js** and add this line after the line where you imported *ExpressJS*:
+---
 
+## The CRUD
 
-```javascript
-//Basic packages
-require('dotenv').config()
-const DB = require('./DB/dbConn.js')
+So far, we have learned how to:
 
-```
+- create a server;
+- create routes;
+- connect route files to the main server;
+- configure a MySQL connection.
 
-9. Run the code as usual with *node index.js*
+Now we will add Create, Read, Update and Delete-style database operations. In this tutorial, we implement:
 
+- read all news;
+- read one news item;
+- create one news item;
+- login user;
+- register user.
 
-### The CRUD
-For this part, it's important that you understand the logic of the server and how it interacts with the routes and the database. One technique to do this is to read the code and sketch the app's flow.
+### 1. Add database helper functions
 
+Replace the content of `src/DB/dbConn.ts` with this:
 
-So far, we have learned how to create a server that listens for incoming requests, how to create a route to handle requests on a specific endpoint, and lastly, how to establish a connection with the database.
+```ts
+import mysql, { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
-
-Now it's time to expand our application and write the code for Creating, Reading, Updating, and Deleting data from our database.
-
-
-1. In **dbConn.js** add the code to handle the CRUD operations:
-```javascript
-let dataPool={}
- dataPool.allNovice=()=>{
- return new Promise ((resolve, reject)=>{
-   conn.query(`SELECT * FROM news`, (err,res)=>{
-     if(err){return reject(err)}
-     return resolve(res)
-   })
- })
-}
-
-
-dataPool.oneNovica=(id)=>{
- return new Promise ((resolve, reject)=>{
-   conn.query(`SELECT * FROM news WHERE id = ?`, id, (err,res)=>{
-     if(err){return reject(err)}
-     return resolve(res)
-   })
- })
-}
-
-
-dataPool.creteNovica=(title,slug,text)=>{
- return new Promise ((resolve, reject)=>{
-   conn.query(`INSERT INTO news (title,slug,text) VALUES (?,?,?)`, [title, slug, text], (err,res)=>{
-     if(err){return reject(err)}
-     return resolve(res)
-   })
- })
-}
-
-
-module.exports = dataPool;
-```
-
-
-- Note that I have created an object variable to store the data returned after each query.
-- The returned data is received as a callback from a given function. In this case, the function returns a  *[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)*.
-- As you may noticed, the *Promise* is a function that will return either an error if the request failed or a resolution if data query was fulfilled.
-- What is the data that needs to be resolved or return as error? The one we are requesting in the *conn.query()*
-- The string that we pass as parameter into the query function might look familiar to you; this is because it is as SQL instruction that you  already learned to use in previous lab sessions.
-- To keep things short I have also implemented a request for a single new *oneNovica* that it's pretty similar to the first function but I have included and identifier to overload the request.
-- The last function *createNovica* follows a similar structure to *oneNoica* but receives 3 parameters instead. This is because we defined our database to autoincrement the id counter everytime a new article is inserted.
-- Analyse previous code and make sure you understand what is going on.
-
-
-2. Add the queries related with the user login
-```javascript
-dataPool.AuthUser=(username)=>
-{
- return new Promise ((resolve, reject)=>{
-   conn.query('SELECT * FROM user_login WHERE user_name = ?', username, (err,res, fields)=>{
-     if(err){return reject(err)}
-     return resolve(res)
-   })
- }) 
- }
-```
-- In a sense, they follow a similar pattern as the previous queries for news, but in this case, they deal with data associated with user accounts.
-3. Open **novice.js** and replace the all previous code with the following:
-
-
-```javascript
-const express= require("express")
-const novice = express.Router();
-const DB=require('../DB/dbConn.js')
-
-
-//Gets all the news in the DB
-novice.get('/', async (req,res, next)=>{
-   try{
-       var queryResult=await DB.allNovice();
-       res.json(queryResult)
-   }
-   catch(err){
-       console.log(err)
-       res.sendStatus(500)
-   }
-})
-
-
-//Gets one new based on the id
-novice.get('/:id', async (req,res, next)=>{
-   try{
-       var queryResult=await DB.oneNovica(req.params.id)
-       res.json(queryResult)
-   }
-   catch(err){
-       console.log(err)
-       res.sendStatus(500)
-   }
-})
-
-var bodyParser = require('body-parser')
-// create application/x-www-form-urlencoded parser
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
-//Inserts one new item to the database
-novice.post('/', urlencodedParser, async (req,res, next)=>{
-      
- let title = req.body.title
- let slug = req.body.slug
- let text = req.body.text
-
-
-   var isAcompleteNovica=title && slug && text
-   if (isAcompleteNovica)
-   {
-       try{
-           var queryResult=await DB.creteNovica(title,slug,text)
-           if (queryResult.affectedRows) {
-               console.log("New article added!!")
-             }
-       }
-       catch(err){
-           console.log(err)
-           res.status(500)
-       }   
-   } 
-   else
-   {
-    console.log("A field is empty!!")
-   }
-   res.end()
-
-
- })
-module.exports=novice
-```
-- Please note that the first two routes use the GET method, while the last one uses the POST method.
-- Observe the use of try and catch statements that help in handling errors and prevent the application from breaking during runtime.
- 
-
-
-4. Create a new file  in **routes** folder and name it **users.js** then copy and paste the following code:
-```javascript
-const express= require("express")
-const users = express.Router();
-const DB=require('../DB/dbConn.js')
-
-
-//Checks if user submitted both fields, if user exist and if the combination of user and password matches
-users.post('/login', async (req, res) => {
- 
- var username = req.body.username;
- var password = req.body.password;
-   if (username && password)
-   {
-       try
-       {
-        let queryResult=await DB.AuthUser(username);
-      
-               if(queryResult.length>0)
-               {
-                   if(password===queryResult[0].user_password)
-                   {
-                    console.log(queryResult)
-                    console.log("LOGIN OK");
-                    res.status(200)
-                   }
-                   else
-                   {
-                      console.log("INCORRECT PASSWORD");
-                      res.status(204)
-                   }
-               }else
-               {
-                  console.log("USER NOT REGISTRED");
-                  res.status(204)  
-               }
-       }
-       catch(err){
-           console.log(err)
-           res.status(500)
-       }   
-   }
-   else
-   {
-       console.log("Please enter Username and Password!")
-       res.status(204)
-   }
-   res.end();
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_DATABASE,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
+export interface NewsItem extends RowDataPacket {
+  id: number;
+  title: string;
+  slug: string;
+  text: string;
+}
 
-// Inserts a new user in our database
-// Add your code here!
+export interface UserLogin extends RowDataPacket {
+  id: number;
+  user_name: string;
+  user_email: string;
+  user_password: string;
+}
 
-module.exports=users
+export const allNovice = async (): Promise<NewsItem[]> => {
+  const [rows] = await pool.query<NewsItem[]>("SELECT * FROM news");
+  return rows;
+};
+
+export const oneNovica = async (id: string): Promise<NewsItem[]> => {
+  const [rows] = await pool.query<NewsItem[]>(
+    "SELECT * FROM news WHERE id = ?",
+    [id]
+  );
+
+  return rows;
+};
+
+export const createNovica = async (
+  title: string,
+  slug: string,
+  text: string
+): Promise<ResultSetHeader> => {
+  const [result] = await pool.query<ResultSetHeader>(
+    "INSERT INTO news (title, slug, text) VALUES (?, ?, ?)",
+    [title, slug, text]
+  );
+
+  return result;
+};
+
+export const authUser = async (username: string): Promise<UserLogin[]> => {
+  const [rows] = await pool.query<UserLogin[]>(
+    "SELECT * FROM user_login WHERE user_name = ?",
+    [username]
+  );
+
+  return rows;
+};
+
+export const createUser = async (
+  username: string,
+  email: string,
+  password: string
+): Promise<ResultSetHeader> => {
+  const [result] = await pool.query<ResultSetHeader>(
+    "INSERT INTO user_login (user_name, user_email, user_password) VALUES (?, ?, ?)",
+    [username, email, password]
+  );
+
+  return result;
+};
 ```
 
+### 2. Update the news routes
 
-- Similarly to **novice.js**  we begin by importing the necessary dependencies and modules. Then, we proceed to define the logic for each route in this file. In this case, we are concerned with two main functionalities: i) handling user login attempts, and ii) facilitating user registration.
-- For sure you noticed that in both files **novice.js** and **users.js** we are using the custom methods we created in **dbConn.js**. Also that we are using special keywords, such as: await and async.For now the only thing you need to know about them is that they are connected with the previously introduced *Promises*.
-If you are curious about it please read some basic of [asynchronous programming](https://semaphoreci.com/blog/asynchronous-javascript#:~:text=Asynchronicity%20means%20that%20if%20JavaScript,callback%20queue%20and%20event%20loop) in JavaScript.
+Replace the content of `src/routes/novice.routes.ts` with this:
 
+```ts
+import { Request, Response, NextFunction, Router } from "express";
+import { allNovice, createNovica, oneNovica } from "../DB/dbConn.js";
 
-5. Save and run our server to check that everything works.
+const router = Router();
 
+const getAllNovice = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const queryResult = await allNovice();
 
-- You can use tools like [Postman](https://www.postman.com/) to send request to your server.
+    res.json(queryResult);
+  } catch (error) {
+    next(error);
+  }
+};
 
+const getOneNovica = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const queryResult = await oneNovica(req.params.id);
 
-For now we have reached this tutorial. There are a few more thing to do in the back-end but we will finish them during later on.
+    if (queryResult.length === 0) {
+      res.status(404).json({
+        success: false,
+        message: "News item not found.",
+      });
 
-## Exercises
-### Exercises 1: POST request
-Using postman create a post request to endpoint http://ADDRESS:PORT/novice to add new news item. Make sure to add title, slug and text parameters to the body.
-Using postman create a post request to endpoint http://ADDRESS:PORT/users/login to authenticate user. Make sure to add username and password parameters to the body.
+      return;
+    }
 
+    res.json(queryResult[0]);
+  } catch (error) {
+    next(error);
+  }
+};
 
-### Exercises 2: Adding JSON response to POST request
-Update web application so that the POST requests in Exercise 1 responds with json. Do this for both endpoints mentioned in exercise 1. Here is an example response:
+const addNovica = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { title, slug, text } = req.body as {
+      title?: string;
+      slug?: string;
+      text?: string;
+    };
+
+    if (!title || !slug || !text) {
+      res.status(400).json({
+        success: false,
+        message: "Title, slug and text are required.",
+      });
+
+      return;
+    }
+
+    const queryResult = await createNovica(title, slug, text);
+
+    if (queryResult.affectedRows === 1) {
+      res.status(201).json({
+        success: true,
+        message: "News item added.",
+      });
+
+      return;
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "News item was not added.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.get("/", getAllNovice);
+router.get("/:id", getOneNovica);
+router.post("/", addNovica);
+
+export default router;
+```
+
+Important updates compared with the old version:
+
+- `require()` was replaced with `import`;
+- `module.exports` was replaced with `export default`;
+- `body-parser` was removed because Express can handle JSON and URL-encoded form bodies directly with `express.json()` and `express.urlencoded()`;
+- handlers are function-based;
+- response status and JSON are written in Express 5-compatible style, for example `res.status(201).json(...)`.
+
+### 3. Create the users route
+
+Inside `src/routes`, create a file named `users.routes.ts`.
+
+Add this code:
+
+```ts
+import { Request, Response, NextFunction, Router } from "express";
+import { authUser, createUser } from "../DB/dbConn.js";
+
+const router = Router();
+
+const loginUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { username, password } = req.body as {
+      username?: string;
+      password?: string;
+    };
+
+    if (!username || !password) {
+      res.status(400).json({
+        success: false,
+        message: "Username and password are required.",
+      });
+
+      return;
+    }
+
+    const queryResult = await authUser(username);
+
+    if (queryResult.length === 0) {
+      res.status(401).json({
+        success: false,
+        message: "User is not registered.",
+      });
+
+      return;
+    }
+
+    const user = queryResult[0];
+
+    if (password !== user.user_password) {
+      res.status(401).json({
+        success: false,
+        message: "Incorrect password.",
+      });
+
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful.",
+      user: {
+        id: user.id,
+        username: user.user_name,
+        email: user.user_email,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const registerUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { username, email, password } = req.body as {
+      username?: string;
+      email?: string;
+      password?: string;
+    };
+
+    if (!username || !email || !password) {
+      res.status(400).json({
+        success: false,
+        message: "Username, email and password are required.",
+      });
+
+      return;
+    }
+
+    const queryResult = await createUser(username, email, password);
+
+    if (queryResult.affectedRows === 1) {
+      res.status(201).json({
+        success: true,
+        message: "User registered.",
+      });
+
+      return;
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "User was not registered.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.post("/login", loginUser);
+router.post("/register", registerUser);
+
+export default router;
+```
+
+Security note: this tutorial compares passwords as plain text to keep the example simple. In a real application, never store plain-text passwords. Use password hashing with a package such as `bcrypt`.
+
+### 4. Register the users route in `index.ts`
+
+Update `src/index.ts`:
+
+```ts
+import "dotenv/config";
+import express, { Request, Response, NextFunction } from "express";
+import noviceRouter from "./routes/novice.routes.js";
+import usersRouter from "./routes/users.routes.js";
+
+const app = express();
+const port = Number(process.env.PORT) || 5000;
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.get("/", (_req: Request, res: Response) => {
+  res.send("Hello from Express 5 and TypeScript");
+});
+
+app.use("/novice", noviceRouter);
+app.use("/users", usersRouter);
+
+app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  console.error(error);
+
+  res.status(500).json({
+    success: false,
+    message: "Internal server error",
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port: ${port}`);
+});
+```
+
+### 5. Run the server
+
+Run:
+
+```console
+npm run dev
+```
+
+You can use Postman, Insomnia, curl or a frontend application to test your API.
+
+---
+
+# API endpoints
+
+## Get all news
+
+```text
+GET http://ADDRESS:PORT/novice
+```
+
+Example local URL:
+
+```text
+GET http://localhost:5000/novice
+```
+
+## Get one news item
+
+```text
+GET http://ADDRESS:PORT/novice/:id
+```
+
+Example:
+
+```text
+GET http://localhost:5000/novice/1
+```
+
+## Add news item
+
+```text
+POST http://ADDRESS:PORT/novice
+```
+
+JSON body:
+
 ```json
 {
- "success": true,
- "message": "News item added."
+  "title": "My first news item",
+  "slug": "my-first-news-item",
+  "text": "This is the content of the news item."
 }
 ```
 
-HINT: The code snippet below shows you how to add JSON response.
-```javascript
-const express = require('express');
-const app = express();
+## Login user
 
+```text
+POST http://ADDRESS:PORT/users/login
+```
 
-app.get('/api/success', (req, res) => {
-   res.json({ success: true });
-});
+JSON body:
 
+```json
+{
+  "username": "ana",
+  "password": "test123"
+}
+```
 
-app.listen(3000, () => {
-   console.log('Server is running on port 3000');
+## Register user
+
+```text
+POST http://ADDRESS:PORT/users/register
+```
+
+JSON body:
+
+```json
+{
+  "username": "ana",
+  "email": "ana@example.com",
+  "password": "test123"
+}
+```
+
+---
+
+# Exercises
+
+## Exercise 1: POST requests
+
+Using Postman, create a POST request to:
+
+```text
+http://ADDRESS:PORT/novice
+```
+
+Add the following JSON body:
+
+```json
+{
+  "title": "Example title",
+  "slug": "example-title",
+  "text": "Example text"
+}
+```
+
+Then create a POST request to:
+
+```text
+http://ADDRESS:PORT/users/login
+```
+
+Add the following JSON body:
+
+```json
+{
+  "username": "your-username",
+  "password": "your-password"
+}
+```
+
+---
+
+## Exercise 2: JSON responses
+
+Update the application so every POST request returns a JSON response.
+
+Example response:
+
+```json
+{
+  "success": true,
+  "message": "News item added."
+}
+```
+
+Hint:
+
+```ts
+res.status(201).json({
+  success: true,
+  message: "News item added.",
 });
 ```
 
+---
 
-### Exercises 3: Create new endpoint to register new users
-The endpoint http://ADDRESS:PORT/users/register on post request should insert new user to QIgniter database, table user_login.
+## Exercise 3: Register new users
 
+Create and test this endpoint:
 
-HINT: You need to do something very similar to what was done when adding news item to the database.
-Here is example of SQL code to add new user to the database.
-
-
-```SQL
-INSERT INTO user_login (user_name,user_email,user_password) VALUES (?,?,?)
+```text
+POST http://ADDRESS:PORT/users/register
 ```
 
+It should insert a new user into the `user_login` table.
+
+SQL query:
+
+```sql
+INSERT INTO user_login (user_name, user_email, user_password) VALUES (?, ?, ?)
+```
+
+Example JSON body:
+
+```json
+{
+  "username": "new-user",
+  "email": "new-user@example.com",
+  "password": "secret"
+}
+```
+
+---
+
+## Exercise 4: Convert CommonJS to ES Modules
+
+Convert this old CommonJS code:
+
+```js
+const express = require("express");
+const router = express.Router();
+
+module.exports = router;
+```
+
+to ES Modules:
+
+```ts
+import { Router } from "express";
+
+const router = Router();
+
+export default router;
+```
+
+---
+
+## Exercise 5: Convert class-based routing to function-based routing
+
+Convert this older class-based handler:
+
+```ts
+class NewsController {
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      res.json([]);
+    } catch (error) {
+      next(error);
+    }
+  }
+}
+
+const controller = new NewsController();
+
+router.get("/", controller.getAll.bind(controller));
+```
+
+to function-based routing:
+
+```ts
+const getAll = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.json([]);
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.get("/", getAll);
+```
+
+---
+
+# Summary
+
+In this tutorial, we updated the original Node.js and Express tutorial to use a modern back-end setup:
+
+- TypeScript instead of plain JavaScript;
+- ES Modules instead of CommonJS;
+- function-based routing instead of class-based routing;
+- Express 5-compatible request and response handling;
+- `mysql2/promise` for cleaner async database code;
+- centralized error handling;
+- JSON responses for API endpoints.
