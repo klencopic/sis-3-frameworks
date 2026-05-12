@@ -300,18 +300,23 @@ Node.js provides:
 - built-in modules;
 - the ability to run server-side applications.
 
-### Installation
+### Installation and runtime envrionemnt
 
-Install Node.js from the official Node.js website.
+There are several ways to create a runtime environment for your Node.js applications. You can do this using one of the following options:
 
-After installation, check your version:
+- Local development environment
+- SSH remote development
+- Simulated server environment using Docker
+
+Detailed instructions are available here:
+
+https://e.famnit.upr.si/course/section.php?id=101908
+
+You can check the version of the Node.js runtime environment installed on your system by running:
 
 ```console
 node --version
 npm --version
-```
-
-For this tutorial, use a recent Node.js version that supports modern TypeScript and ESM workflows.
 
 ---
 
