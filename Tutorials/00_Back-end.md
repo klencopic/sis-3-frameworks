@@ -10,13 +10,6 @@ The web service will have an API which enables us to:
 - register a new user;
 - login/authenticate an existing user.
 
-This updated version of the tutorial uses:
-
-- **TypeScript** instead of plain JavaScript;
-- **ES Modules** using `import` / `export` instead of CommonJS `require()` / `module.exports`;
-- **function-based routing** instead of class-based controllers;
-- **Express 5**.
-
 ---
 
 ## 1. JavaScript and TypeScript
@@ -300,7 +293,7 @@ Node.js provides:
 - built-in modules;
 - the ability to run server-side applications.
 
-### Installation and runtime envrionemnt
+### Installation and runtime environment
 
 There are several ways to create a runtime environment for your Node.js applications. You can do this using one of the following options:
 
@@ -424,31 +417,18 @@ Create a file named `tsconfig.json`:
 
 ### 5. Update `package.json`
 
-Edit your `package.json` so it contains:
+Edit your `package.json` so it contains also:
 
 ```json
-{
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
-  }
-}
+  },
 ```
 
-You do not need to copy this whole file if your `package.json` already contains other fields. Add or update only these parts:
-
-```json
-{
-  "type": "module",
-  "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
-  }
-}
-```
+You do not need to replace this whole file `package.json` but only update it.
 
 ### 6. Create the source folder
 
@@ -513,7 +493,7 @@ http://ADDRESS:PORT/
 For example, if you run the server locally on port `5000`, visit:
 
 ```text
-http://localhost:5000/
+http://88.200.63.148:5000/
 ```
 
 You should see:
@@ -522,7 +502,7 @@ You should see:
 Hello from Express 5 and TypeScript
 ```
 
-If you recieve an error similar to this:
+If you receive an error similar to this:
 ```text
 node:events:486
       throw er; // Unhandled 'error' event
@@ -546,10 +526,11 @@ Emitted 'error' event on Server instance at:
 Node.js v24.14.1
 ```
 
-You are faced with a port in use problem. Only one service can run on any given port. To resolve this problem go to port list:
+You are facing a **port already in use** problem. Only one service can run on any given port. To resolve this problem, go to the port list and reserve a port for yourself:
+
 https://docs.google.com/spreadsheets/d/1HRiWAmrBMDFY4kNgbBRplCUtS3eWDqN0T2xJXkLS3kE/edit?usp=sharing
 
-and reserve a port for you and use it from now onwards. If it stops working, just go and get another port for you. There are plenty. You can have as many ports as you would like.
+Use the reserved port from now on. If that port stops working, choose and reserve another available port from the list. There are plenty of available ports, and you may reserve as many as you need.
 
 ---
 
@@ -567,7 +548,7 @@ mkdir src/routes
 
 ### 2. Create the news route file
 
-Inside `src/routes`, create a file named `novice.routes.ts`.
+Inside `src/routes`, create a file named `news.routes.ts`.
 
 Add this code:
 
@@ -576,20 +557,20 @@ import { Request, Response, NextFunction, Router } from "express";
 
 const router = Router();
 
-const getAllNovice = async (
+const getAllNews = async (
   _req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    console.log("The /novice route has been reached");
-    res.send("novice");
+    console.log("The /news route has been reached");
+    res.send("news");
   } catch (error) {
     next(error);
   }
 };
 
-router.get("/", getAllNovice);
+router.get("/", getAllNews);
 
 export default router;
 ```
@@ -601,7 +582,7 @@ Update `src/index.ts`:
 ```ts
 import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
-import noviceRouter from "./routes/novice.routes.js";
+import newsRouter from "./routes/news.routes.js";
 
 const app = express();
 const port = Number(process.env.PORT) || 5000;
@@ -614,7 +595,7 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 // Routes
-app.use("/novice", noviceRouter);
+app.use("/news", newsRouter);
 
 // Central error handler
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
@@ -634,10 +615,10 @@ app.listen(port, () => {
 Notice this import:
 
 ```ts
-import noviceRouter from "./routes/novice.routes.js";
+import newsRouter from "./routes/news.routes.js";
 ```
 
-Even though the file is named `novice.routes.ts`, we use `.js` in the import path because TypeScript will compile the file to JavaScript in the `dist` folder.
+Even though the file is named `news.routes.ts`, we use `.js` in the import path because TypeScript will compile the file to JavaScript in the `dist` folder.
 
 ### 4. Test the route
 
@@ -650,13 +631,13 @@ npm run dev
 Visit:
 
 ```text
-http://ADDRESS:PORT/novice
+http://ADDRESS:PORT/news
 ```
 
 You should see:
 
 ```text
-novice
+news
 ```
 
 
@@ -774,12 +755,12 @@ export interface UserLogin extends RowDataPacket {
   user_password: string;
 }
 
-export const allNovice = async (): Promise<NewsItem[]> => {
+export const allNews = async (): Promise<NewsItem[]> => {
   const [rows] = await pool.query<NewsItem[]>("SELECT * FROM news");
   return rows;
 };
 
-export const oneNovica = async (id: string): Promise<NewsItem[]> => {
+export const oneNewsItem = async (id: string): Promise<NewsItem[]> => {
   const [rows] = await pool.query<NewsItem[]>(
     "SELECT * FROM news WHERE id = ?",
     [id]
@@ -788,7 +769,7 @@ export const oneNovica = async (id: string): Promise<NewsItem[]> => {
   return rows;
 };
 
-export const createNovica = async (
+export const createNewsItem = async (
   title: string,
   slug: string,
   text: string
@@ -826,21 +807,21 @@ export const createUser = async (
 
 ### 2. Update the news routes
 
-Replace the content of `src/routes/novice.routes.ts` with this:
+Replace the content of `src/routes/news.routes.ts` with this:
 
 ```ts
 import { Request, Response, NextFunction, Router } from "express";
-import { allNovice, createNovica, oneNovica } from "../DB/dbConn.js";
+import { allNews, createNewsItem, oneNewsItem } from "../DB/dbConn.js";
 
 const router = Router();
 
-const getAllNovice = async (
+const getAllNews = async (
   _req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const queryResult = await allNovice();
+    const queryResult = await allNews();
 
     res.json(queryResult);
   } catch (error) {
@@ -848,13 +829,13 @@ const getAllNovice = async (
   }
 };
 
-const getOneNovica = async (
+const getOneNewsItem = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const queryResult = await oneNovica(req.params.id);
+    const queryResult = await oneNewsItem(req.params.id);
 
     if (queryResult.length === 0) {
       res.status(404).json({
@@ -871,7 +852,7 @@ const getOneNovica = async (
   }
 };
 
-const addNovica = async (
+const addNewsItem = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -892,7 +873,7 @@ const addNovica = async (
       return;
     }
 
-    const queryResult = await createNovica(title, slug, text);
+    const queryResult = await createNewsItem(title, slug, text);
 
     if (queryResult.affectedRows === 1) {
       res.status(201).json({
@@ -912,9 +893,9 @@ const addNovica = async (
   }
 };
 
-router.get("/", getAllNovice);
-router.get("/:id", getOneNovica);
-router.post("/", addNovica);
+router.get("/", getAllNews);
+router.get("/:id", getOneNewsItem);
+router.post("/", addNewsItem);
 
 export default router;
 ```
@@ -1043,7 +1024,7 @@ Update `src/index.ts`:
 ```ts
 import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
-import noviceRouter from "./routes/novice.routes.js";
+import newsRouter from "./routes/news.routes.js";
 import usersRouter from "./routes/users.routes.js";
 
 const app = express();
@@ -1056,7 +1037,7 @@ app.get("/", (_req: Request, res: Response) => {
   res.send("Hello from Express 5 and TypeScript");
 });
 
-app.use("/novice", noviceRouter);
+app.use("/news", newsRouter);
 app.use("/users", usersRouter);
 
 app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
@@ -1090,27 +1071,27 @@ You can use Postman, Insomnia, curl or a frontend application to test your API.
 ## Get all news
 
 ```text
-GET http://ADDRESS:PORT/novice
+GET http://ADDRESS:PORT/news
 ```
 Example: 
 ```text
-GET http://88.200.63.148:5000/novice
+GET http://88.200.63.148:5000/news
 ```
 
 ## Get one news item
 
 ```text
-GET http://ADDRESS:PORT/novice/:id
+GET http://ADDRESS:PORT/news/:id
 ```
 Example: 
 ```text
-GET http://88.200.63.148:5000/novice/:1
+GET http://88.200.63.148:5000/news/1
 ```
 
 ## Add news item
 
 ```text
-POST http://ADDRESS:PORT/novice
+POST http://ADDRESS:PORT/news
 ```
 
 JSON body:
@@ -1163,9 +1144,9 @@ JSON body:
 Using Postman, test the following endpoints:
 
 ```text
-GET http://ADDRESS:PORT/novice
-GET http://ADDRESS:PORT/novice/:id
-POST http://ADDRESS:PORT/novice
+GET http://ADDRESS:PORT/news
+GET http://ADDRESS:PORT/news/:id
+POST http://ADDRESS:PORT/news
 POST http://ADDRESS:PORT/users/login
 POST http://ADDRESS:PORT/users/register
 ```
@@ -1247,7 +1228,7 @@ const title = req.body.title?.trim();
 Apply the same idea to the required fields in:
 
 ```text
-POST /novice
+POST /news
 POST /users/login
 POST /users/register
 ```
@@ -1259,7 +1240,7 @@ POST /users/register
 Create a new endpoint:
 
 ```text
-DELETE http://ADDRESS:PORT/novice/:id
+DELETE http://ADDRESS:PORT/news/:id
 ```
 
 The endpoint should delete one news item from the `news` table based on its `id`.
@@ -1272,7 +1253,7 @@ Example SQL:
 DELETE FROM news WHERE id = ?
 ```
 
-Then add a new route handler in `novice.routes.ts`.
+Then add a new route handler in `news.routes.ts`.
 
 Expected successful response:
 
@@ -1307,7 +1288,7 @@ Recommended status codes:
 Create a new endpoint:
 
 ```text
-PUT http://ADDRESS:PORT/novice/:id
+PUT http://ADDRESS:PORT/news/:id
 ```
 
 The endpoint should update the `title`, `slug` and `text` of an existing news item.
