@@ -919,14 +919,6 @@ router.post("/", addNovica);
 export default router;
 ```
 
-Important updates compared with the old version:
-
-- `require()` was replaced with `import`;
-- `module.exports` was replaced with `export default`;
-- `body-parser` was removed because Express can handle JSON and URL-encoded form bodies directly with `express.json()` and `express.urlencoded()`;
-- handlers are function-based;
-- response status and JSON are written in Express 5-compatible style, for example `res.status(201).json(...)`.
-
 ### 3. Create the users route
 
 Inside `src/routes`, create a file named `users.routes.ts`.
@@ -1100,11 +1092,9 @@ You can use Postman, Insomnia, curl or a frontend application to test your API.
 ```text
 GET http://ADDRESS:PORT/novice
 ```
-
-Example local URL:
-
+Example: 
 ```text
-GET http://localhost:5000/novice
+GET http://88.200.63.148:5000/novice
 ```
 
 ## Get one news item
@@ -1112,11 +1102,9 @@ GET http://localhost:5000/novice
 ```text
 GET http://ADDRESS:PORT/novice/:id
 ```
-
-Example:
-
+Example: 
 ```text
-GET http://localhost:5000/novice/1
+GET http://88.200.63.148:5000/novice/:1
 ```
 
 ## Add news item
@@ -1129,8 +1117,8 @@ JSON body:
 
 ```json
 {
-  "title": "My first news item",
-  "slug": "my-first-news-item",
+  "title": "My POST news item",
+  "slug": "my-post-news-item",
   "text": "This is the content of the news item."
 }
 ```
@@ -1145,7 +1133,7 @@ JSON body:
 
 ```json
 {
-  "username": "ana",
+  "username": "testuser",
   "password": "test123"
 }
 ```
@@ -1170,15 +1158,21 @@ JSON body:
 
 # Exercises
 
-## Exercise 1: POST requests
+## Exercise 1: Test the existing API with Postman
 
-Using Postman, create a POST request to:
+Using Postman, test the following endpoints:
 
 ```text
-http://ADDRESS:PORT/novice
+GET http://ADDRESS:PORT/novice
+GET http://ADDRESS:PORT/novice/:id
+POST http://ADDRESS:PORT/novice
+POST http://ADDRESS:PORT/users/login
+POST http://ADDRESS:PORT/users/register
 ```
 
-Add the following JSON body:
+For POST requests, send the request body as JSON.
+
+Example request body for adding a news item:
 
 ```json
 {
@@ -1188,146 +1182,220 @@ Add the following JSON body:
 }
 ```
 
-Then create a POST request to:
-
-```text
-http://ADDRESS:PORT/users/login
-```
-
-Add the following JSON body:
+Example request body for user login:
 
 ```json
 {
-  "username": "your-username",
-  "password": "your-password"
+  "username": "testuser",
+  "password": "test123"
+}
+```
+
+Example request body for user registration:
+
+```json
+{
+  "username": "newuser",
+  "email": "newuser@example.com",
+  "password": "secret123"
 }
 ```
 
 ---
 
-## Exercise 2: JSON responses
+## Exercise 2: Validate empty strings
 
-Update the application so every POST request returns a JSON response.
+The current implementation checks whether fields exist, but it should also reject empty strings.
 
-Example response:
+For example, this request should fail:
+
+```json
+{
+  "title": "",
+  "slug": "",
+  "text": ""
+}
+```
+
+A request containing only spaces should also fail:
+
+```json
+{
+  "title": "   ",
+  "slug": "   ",
+  "text": "   "
+}
+```
+
+Expected response:
+
+```json
+{
+  "success": false,
+  "message": "Title, slug and text are required."
+}
+```
+
+Hint: use `.trim()` before validation.
+
+Example:
+
+```ts
+const title = req.body.title?.trim();
+```
+
+Apply the same idea to the required fields in:
+
+```text
+POST /novice
+POST /users/login
+POST /users/register
+```
+
+---
+
+## Exercise 3: Add a DELETE endpoint for news
+
+Create a new endpoint:
+
+```text
+DELETE http://ADDRESS:PORT/novice/:id
+```
+
+The endpoint should delete one news item from the `news` table based on its `id`.
+
+Add a new database function in `dbConn.ts`.
+
+Example SQL:
+
+```sql
+DELETE FROM news WHERE id = ?
+```
+
+Then add a new route handler in `novice.routes.ts`.
+
+Expected successful response:
 
 ```json
 {
   "success": true,
-  "message": "News item added."
+  "message": "News item deleted."
 }
 ```
 
-Hint:
-
-```ts
-res.status(201).json({
-  success: true,
-  message: "News item added.",
-});
-```
-
----
-
-## Exercise 3: Register new users
-
-Create and test this endpoint:
-
-```text
-POST http://ADDRESS:PORT/users/register
-```
-
-It should insert a new user into the `user_login` table.
-
-SQL query:
-
-```sql
-INSERT INTO user_login (user_name, user_email, user_password) VALUES (?, ?, ?)
-```
-
-Example JSON body:
+If the news item does not exist, return:
 
 ```json
 {
-  "username": "new-user",
-  "email": "new-user@example.com",
-  "password": "secret"
+  "success": false,
+  "message": "News item not found."
 }
 ```
 
----
+Recommended status codes:
 
-## Exercise 4: Convert CommonJS to ES Modules
-
-Convert this old CommonJS code:
-
-```js
-const express = require("express");
-const router = express.Router();
-
-module.exports = router;
-```
-
-to ES Modules:
-
-```ts
-import { Router } from "express";
-
-const router = Router();
-
-export default router;
+```text
+200 OK              when the news item is deleted
+404 Not Found       when the news item does not exist
+500 Internal Error  when a server or database error occurs
 ```
 
 ---
 
-## Exercise 5: Convert class-based routing to function-based routing
+## Exercise 4: Add an UPDATE endpoint for news
 
-Convert this older class-based handler:
+Create a new endpoint:
 
-```ts
-class NewsController {
-  async getAll(req: Request, res: Response, next: NextFunction) {
-    try {
-      res.json([]);
-    } catch (error) {
-      next(error);
-    }
+```text
+PUT http://ADDRESS:PORT/novice/:id
+```
+
+The endpoint should update the `title`, `slug` and `text` of an existing news item.
+
+Add a new database function in `dbConn.ts`.
+
+Example SQL:
+
+```sql
+UPDATE news
+SET title = ?, slug = ?, text = ?
+WHERE id = ?
+```
+
+Example request body:
+
+```json
+{
+  "title": "Updated title",
+  "slug": "updated-title",
+  "text": "Updated text"
+}
+```
+
+Expected successful response:
+
+```json
+{
+  "success": true,
+  "message": "News item updated."
+}
+```
+
+If the news item does not exist, return:
+
+```json
+{
+  "success": false,
+  "message": "News item not found."
+}
+```
+
+Recommended status codes:
+
+```text
+200 OK              when the news item is updated
+400 Bad Request     when title, slug or text is missing
+404 Not Found       when the news item does not exist
+500 Internal Error  when a server or database error occurs
+```
+
+---
+
+## Exercise 5: Do not return the user password after login
+
+Check the response from:
+
+```text
+POST http://ADDRESS:PORT/users/login
+```
+
+Make sure the response does **not** include `user_password`.
+
+A good response should look like this:
+
+```json
+{
+  "success": true,
+  "message": "Login successful.",
+  "user": {
+    "id": 1,
+    "username": "testuser",
+    "email": "testuser@example.com"
   }
 }
-
-const controller = new NewsController();
-
-router.get("/", controller.getAll.bind(controller));
 ```
 
-to function-based routing:
+The password should never be returned in an API response.
 
-```ts
-const getAll = async (
-  _req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    res.json([]);
-  } catch (error) {
-    next(error);
-  }
-};
+Check your code in `users.routes.ts` and make sure that only safe user data is returned.
 
-router.get("/", getAll);
+Do not return this:
+
+```json
+{
+  "id": 1,
+  "user_name": "testuser",
+  "user_email": "testuser@example.com",
+  "user_password": "test123"
+}
 ```
-
----
-
-# Summary
-
-In this tutorial, we updated the original Node.js and Express tutorial to use a modern back-end setup:
-
-- TypeScript instead of plain JavaScript;
-- ES Modules instead of CommonJS;
-- function-based routing instead of class-based routing;
-- Express 5-compatible request and response handling;
-- `mysql2/promise` for cleaner async database code;
-- centralized error handling;
-- JSON responses for API endpoints.
