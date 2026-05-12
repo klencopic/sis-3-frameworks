@@ -164,7 +164,7 @@ In function-based routing, each route handler is an ordinary function. This is u
 
 ## 4. MySQL
 
-At this stage of the lab sessions, I assume that you already have experience with MySQL and phpMyAdmin. Therefore, we will skip the database creation part and focus on connecting our Express server to the database.
+At this stage of the lab sessions, I assume that you already have some experience with MySQL and phpMyAdmin. In this section, we will create the database and the required tables for this tutorial.
 
 You can access the database through phpMyAdmin:
 
@@ -179,28 +179,112 @@ USER_NAME: see e-classroom
 PASSWORD: see e-classroom
 ```
 
-In this tutorial, examples assume the following tables already exist:
+This tutorial uses one database and two tables:
 
+- `Qcodeigniter`
 - `news`
 - `user_login`
 
-Example `news` table columns:
+The `news` table stores news items. The `user_login` table stores user login data.
+
+### Creating the database and tables
+
+Open phpMyAdmin, go to the **SQL** tab, paste the following SQL code and click **Go**.
+
+```sql
+CREATE DATABASE IF NOT EXISTS Qcodeigniter
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE Qcodeigniter;
+
+CREATE TABLE IF NOT EXISTS news (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) NOT NULL,
+  text TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY unique_news_slug (slug)
+);
+
+CREATE TABLE IF NOT EXISTS user_login (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_name VARCHAR(100) NOT NULL,
+  user_email VARCHAR(255) NOT NULL,
+  user_password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY unique_user_name (user_name),
+  UNIQUE KEY unique_user_email (user_email)
+);
+```
+
+### Adding test data
+
+You can also insert a few test records. This is useful because the first GET requests in the tutorial will already have some data to return.
+
+```sql
+INSERT INTO news (title, slug, text)
+VALUES
+  (
+    'First news item',
+    'first-news-item',
+    'This is the text of the first news item.'
+  ),
+  (
+    'Second news item',
+    'second-news-item',
+    'This is the text of the second news item.'
+  );
+
+INSERT INTO user_login (user_name, user_email, user_password)
+VALUES
+  (
+    'testuser',
+    'testuser@example.com',
+    'test123'
+  );
+```
+
+After running the SQL code, your database should contain the following tables:
+
+```text
+news
+user_login
+```
+
+The `news` table should contain these columns:
 
 ```text
 id
 title
 slug
 text
+created_at
+updated_at
 ```
 
-Example `user_login` table columns:
+The `user_login` table should contain these columns:
 
 ```text
 id
 user_name
 user_email
 user_password
+created_at
+updated_at
 ```
+
+The `.env` file later in this tutorial must use the same database name:
+
+```text
+DB_DATABASE=Qcodeigniter
+```
+
+Important security note: in this tutorial, passwords are stored as plain text only to keep the first example simple. In a real application, passwords must never be stored as plain text. Use password hashing, for example with `bcrypt`.
 
 ---
 
