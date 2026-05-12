@@ -181,7 +181,7 @@ PASSWORD: see e-classroom
 
 This tutorial uses one database and two tables:
 
-- `Qcodeigniter`
+- `frameworks_tutorial`
 - `news`
 - `user_login`
 
@@ -192,11 +192,11 @@ The `news` table stores news items. The `user_login` table stores user login dat
 Open phpMyAdmin, go to the **SQL** tab, paste the following SQL code and click **Go**.
 
 ```sql
-CREATE DATABASE IF NOT EXISTS Qcodeigniter
+CREATE DATABASE IF NOT EXISTS frameworks_tutorial
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-USE Qcodeigniter;
+USE frameworks_tutorial;
 
 CREATE TABLE IF NOT EXISTS news (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -281,7 +281,7 @@ updated_at
 The `.env` file later in this tutorial must use the same database name:
 
 ```text
-DB_DATABASE=Qcodeigniter
+DB_DATABASE=frameworks_tutorial
 ```
 
 Important security note: in this tutorial, passwords are stored as plain text only to keep the first example simple. In a real application, passwords must never be stored as plain text. Use password hashing, for example with `bcrypt`.
@@ -672,7 +672,7 @@ PORT=5000
 DB_HOST=localhost
 DB_USER=see-eclassroom
 DB_PASS=see-eclassroom
-DB_DATABASE=Qcodeigniter
+DB_DATABASE=frameworks_tutorial
 ```
 
 Important: replace the values with your actual database settings.
