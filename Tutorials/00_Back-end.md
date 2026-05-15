@@ -353,9 +353,9 @@ Please follow these steps in order.
 
 ### 1. Create the back-end folder
 
-Clone the repository provided for the course and create a folder named `back-end` at the root level.
+Clone the course repository: https://github.com/klencopic/sis-3-frameworks/.
 
-Create new folder back-end and move into it:
+In the root folder of the reposotory create folder back-end and move into it:
 
 ```console
 mkdir back-end
