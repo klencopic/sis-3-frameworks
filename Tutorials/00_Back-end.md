@@ -355,9 +355,10 @@ Please follow these steps in order.
 
 Clone the repository provided for the course and create a folder named `back-end` at the root level.
 
-Move into the folder:
+Create new folder back-end and move into it:
 
 ```console
+mkdir back-end
 cd back-end
 ```
 
