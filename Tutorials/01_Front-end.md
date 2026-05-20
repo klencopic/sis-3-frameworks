@@ -925,54 +925,6 @@ This CSS makes the application readable and usable without adding unnecessary co
 
 ---
 
-## CORS problem
-
-If your React app cannot read data from the API, you may see an error like this:
-
-```text
-Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource.
-```
-
-This happens when the browser blocks requests between different origins.
-
-For example:
-
-```text
-Front-end: http://88.200.63.148:3000
-Back-end:  http://88.200.63.148:5000
-```
-
-Even though the address is the same, the port is different, so the browser treats them as different origins.
-
-### Back-end solution
-
-If you control the back-end, install CORS support:
-
-```console
-npm install cors
-npm install --save-dev @types/cors
-```
-
-Then update the Express server:
-
-```ts
-import cors from "cors";
-
-app.use(cors());
-```
-
-For a more restrictive setup, allow only your front-end address:
-
-```ts
-app.use(
-  cors({
-    origin: "http://88.200.63.148:3000",
-  })
-);
-```
-
----
-
 # Exercises
 
 ## Exercise 1: Change the API URL
