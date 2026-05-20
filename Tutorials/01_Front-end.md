@@ -925,6 +925,31 @@ This CSS makes the application readable and usable without adding unnecessary co
 
 ---
 
+# Final project structure
+
+At the end of this tutorial, your project should look like this:
+
+```text
+front-end/
+├── package.json
+├── vite.config.js
+├── index.html
+└── src/
+    ├── components/
+    │   ├── Menu.jsx
+    │   └── NewsItem.jsx
+    ├── pages/
+    │   ├── About.jsx
+    │   ├── Login.jsx
+    │   ├── News.jsx
+    │   └── SingleNews.jsx
+    ├── routes/
+    │   └── AppRouter.jsx
+    ├── index.css
+    └── main.jsx
+```
+---
+
 # Exercises
 
 ## Exercise 1: Change the API URL
@@ -1079,9 +1104,9 @@ Important: do not store passwords in `localStorage`.
 
 ---
 
-# Final project structure
+# Final project structure after implementing the solutions
 
-At the end of this tutorial, your project should look like this:
+After implementing solutions your project should look simliar to this:
 
 ```text
 front-end/
@@ -1092,10 +1117,14 @@ front-end/
     ├── components/
     │   ├── Menu.jsx
     │   └── NewsItem.jsx
+    ├── config/
+    │   └── api.js
     ├── pages/
     │   ├── About.jsx
+    │   ├── CreateNews.jsx
     │   ├── Login.jsx
     │   ├── News.jsx
+    │   ├── Register.jsx
     │   └── SingleNews.jsx
     ├── routes/
     │   └── AppRouter.jsx
