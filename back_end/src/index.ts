@@ -2,10 +2,12 @@ import "dotenv/config";
 import express, { Request, Response, NextFunction } from "express";
 import newsRouter from "./routes/news.routes.js";
 import usersRouter from "./routes/users.routes.js";
+import cors from "cors";
 
 const app = express();
 const port = Number(process.env.PORT) || 5000;
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
