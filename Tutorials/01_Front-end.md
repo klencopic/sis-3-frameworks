@@ -144,7 +144,7 @@ Please follow these steps in order.
 
 ### 1. Create a new React application
 
-In the root folder of your course repository, create a new React project using Vite:
+Navigate to the root folder (.../sis-3-frameworks/) of your course repository and create a new React project using Vite:
 
 ```console
 npm create vite@latest front-end -- --template react
@@ -194,6 +194,22 @@ Then open:
 
 ```text
 http://ADDRESS:3000/
+```
+
+You can also configure your Vite to always use this host and port combination. To do this modify vite.config.js file. It should look like this.
+
+```text
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 30008,
+    host: "88.200.63.148"
+  }
+})
 ```
 
 ---
