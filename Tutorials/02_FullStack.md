@@ -448,55 +448,6 @@ Also remember to update the React front-end API URL so it points to the new port
 
 ---
 
-## 7. CORS after deployment
-
-If the front end and back end use different ports, the browser may block API requests.
-
-Example:
-
-```text
-Front-end: http://88.200.63.148
-Back-end:  http://88.200.63.148:5000
-```
-
-If you see this error:
-
-```text
-Cross-Origin Request Blocked
-```
-
-then enable CORS in the back end.
-
-Install CORS in the back-end project:
-
-```console
-npm install cors
-npm install --save-dev @types/cors
-```
-
-Then update the Express server:
-
-```ts
-import cors from "cors";
-
-app.use(cors());
-```
-
-Usually this should be placed before the routes:
-
-```ts
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.use("/news", newsRouter);
-app.use("/users", usersRouter);
-```
-
-Note: `@types/cors` is needed only because the back-end project uses TypeScript.
-
----
-
 # Part 3: Connecting front end and back end
 
 After deploying both parts, check the full flow.
