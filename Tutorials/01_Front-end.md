@@ -187,7 +187,7 @@ http://localhost:5173/
 If you are working on a shared server, you may need to expose the application on a specific port:
 
 ```console
-npm run dev -- --host 0.0.0.0 --port 3000
+npm run dev -- --host 88.200.63.148 --port 3000
 ```
 
 Then open:
@@ -206,7 +206,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 30008,
+    port: 3000,
     host: "88.200.63.148"
   }
 })
