@@ -924,7 +924,38 @@ button:hover {
 This CSS makes the application readable and usable without adding unnecessary complexity.
 
 ---
+# Final project structure
 
+At the end of this tutorial, your project should look like this:
+
+```text
+front-end/
+├── package.json
+├── vite.config.js
+├── index.html
+└── src/
+    ├── components/
+    │   ├── Menu.jsx
+    │   └── NewsItem.jsx
+    ├── pages/
+    │   ├── About.jsx
+    │   ├── Login.jsx
+    │   ├── News.jsx
+    │   └── SingleNews.jsx
+    ├── routes/
+    │   └── AppRouter.jsx
+    ├── index.css
+    └── main.jsx
+```
+
+You now have a React front-end application that communicates with the API built in the previous tutorial.
+
+# Troubleshooting
+
+If news items do not load make sure backend works as intended at the address and port you specified in the code:
+http://ADDRESS:PORT/users/login)
+
+---
 # Exercises
 
 ## Exercise 1: Change the API URL
@@ -1079,9 +1110,9 @@ Important: do not store passwords in `localStorage`.
 
 ---
 
-# Final project structure
+# Final project structure after implementing exercises
 
-At the end of this tutorial, your project should look like this:
+At the end of these exercises, your project should look like similar to this:
 
 ```text
 front-end/
@@ -1092,16 +1123,19 @@ front-end/
     ├── components/
     │   ├── Menu.jsx
     │   └── NewsItem.jsx
+    ├── config/
+    │   └── api.js
     ├── pages/
     │   ├── About.jsx
+    │   ├── CreateNews.jsx
     │   ├── Login.jsx
     │   ├── News.jsx
+    │   ├── Register.jsx
     │   └── SingleNews.jsx
     ├── routes/
     │   └── AppRouter.jsx
     ├── index.css
     └── main.jsx
-```
 
-You now have a React front-end application that communicates with the API built in the previous tutorial.
+---
 
