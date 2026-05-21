@@ -363,12 +363,6 @@ export default function About() {
 }
 ```
 
-Test the page by opening:
-
-```text
-http://ADDRESS:PORT/about
-```
-
 ---
 
 ## Create the News page
