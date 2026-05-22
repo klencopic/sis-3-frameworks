@@ -215,6 +215,7 @@ app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
 
+
 ```
 Now run backend and visit test node application by visiting http://ADDRESS:BACKEND_PORT/.
 
@@ -306,7 +307,6 @@ Your `.gitignore` should include:
 ```text
 .env
 node_modules
-dist
 ```
 
 ---
@@ -334,7 +334,7 @@ npm run build
 If the build succeeds, a `dist` folder is created:
 
 ```text
-back-end/
+backend_klen/
 ├── dist/
 │   ├── index.js
 │   ├── db/
@@ -384,15 +384,15 @@ npm start
 
 it runs only while the terminal session is active.
 
-For deployment, you usually want the server to keep running after you close the terminal.
+For deployment, you usually want the server to keep running after you close the terminal. To do so run:
 
 ```console
-forever start ./dist/index.js
+forever start dist/index.js
 ```
 
-To stop the service use:
+To stop the server run:
 ```console
-forever stop ./dist/index.js
+forever stop dist/index.js
 ```
 
 ---
@@ -420,22 +420,7 @@ npm run build
 npm start
 ```
 
-or, if using pm2:
-
-```console
-npm run build
-pm2 restart frameworks-api
-```
-
-Test:
-
-```text
-/news
-/news/1
-/login
-/register
-/create-news
-```
+Also remember to update the React front-end API URL so it points to the new port.
 
 ---
 
@@ -445,15 +430,15 @@ Before finishing, check:
 
 ```text
 [ ] The database exists and contains the required tables.
-[ ] The back-end .env file contains the correct database credentials.
+[ ] The backend_klen .env file contains the correct database credentials.
 [ ] The back end builds successfully with npm run build.
-[ ] The back end starts successfully with npm start or pm2.
+[ ] The back end starts successfully with npm start or forever.
 [ ] The API works in the browser, Postman or curl.
 [ ] CORS is enabled if the front end uses a different origin.
 [ ] The front-end API URL points to the deployed back end.
 [ ] The front end builds successfully with npm run build.
 [ ] npm run preview works for the front end.
-[ ] The contents of front-end/dist are copied to the web server.
+[ ] The contents of frontend_klen/dist are copied to the web server.
 [ ] Refreshing /news and /news/1 works.
 ```
 
@@ -470,6 +455,15 @@ npm run build
 npm start
 ```
 
+Or with pm2:
+
+```console
+cd back-end
+npm install
+npm run build
+forever start dist/index.js
+```
+
 ## Front end
 
 ```console
@@ -477,7 +471,7 @@ cd front-end
 npm install
 npm run build
 npm run preview
-cp -r dist/* /var/www/my-react-app/
+cp -r dist/* ../backend_klen/dist/frontend-build
 ```
 
 ---
