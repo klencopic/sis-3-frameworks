@@ -150,13 +150,14 @@ Keep in mind that the frontend application runs on the client’s computer. This
 Example:
 
 ```console
-cp -r dist/* ../backend_klen/src/frontend-build
+mkdir -p ../backend_klen/dist/frontend-build
+cp -r dist/* ../backend_klen/dist/frontend-build
 ```
 
 The deployment folder should then look like this:
 
 ```text
-.././backend_klen/src/frontend-build
+.././backend_klen/dist/frontend-build
 ├── index.html
 └── assets/
 ```
@@ -191,10 +192,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+console.log("Curent dir: " + __dirname);
 app.use(express.static(path.join(__dirname, "frontend-build")));
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"))
+  res.sendFile(path.join(__dirname, "index.html"))
 })
+
 
 app.use("/news", newsRouter);
 app.use("/users", usersRouter);
