@@ -215,6 +215,7 @@ app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
 
+
 ```
 Now run backend and visit test node application by visiting http://ADDRESS:BACKEND_PORT/.
 
@@ -306,7 +307,6 @@ Your `.gitignore` should include:
 ```text
 .env
 node_modules
-dist
 ```
 
 ---
@@ -334,7 +334,7 @@ npm run build
 If the build succeeds, a `dist` folder is created:
 
 ```text
-back-end/
+backend_klen/
 ├── dist/
 │   ├── index.js
 │   ├── db/
@@ -384,51 +384,15 @@ npm start
 
 it runs only while the terminal session is active.
 
-For deployment, you usually want the server to keep running after you close the terminal.
-
-One common tool for this is `pm2`.
-
-Install pm2 globally:
+For deployment, you usually want the server to keep running after you close the terminal. To do so run:
 
 ```console
-npm install -g pm2
+forever start dist/index.js
 ```
 
-Start the compiled back end:
-
+To stop the server run:
 ```console
-pm2 start dist/index.js --name frameworks-api
-```
-
-Check running processes:
-
-```console
-pm2 list
-```
-
-View logs:
-
-```console
-pm2 logs frameworks-api
-```
-
-Restart the server:
-
-```console
-pm2 restart frameworks-api
-```
-
-Stop the server:
-
-```console
-pm2 stop frameworks-api
-```
-
-After changing back-end code, rebuild and restart:
-
-```console
-npm run build
-pm2 restart frameworks-api
+forever stop dist/index.js
 ```
 
 ---
@@ -456,56 +420,7 @@ npm run build
 npm start
 ```
 
-or, if using pm2:
-
-```console
-npm run build
-pm2 restart frameworks-api
-```
-
 Also remember to update the React front-end API URL so it points to the new port.
-
----
-
-# Part 3: Connecting front end and back end
-
-After deploying both parts, check the full flow.
-
-The back end should be available at something like:
-
-```text
-http://88.200.63.148:5000
-```
-
-The front end should be available at something like:
-
-```text
-http://88.200.63.148
-```
-
-The front-end API config should point to the back end:
-
-```js
-export const API_URL = "http://88.200.63.148:5000";
-```
-
-Then rebuild and redeploy the front end:
-
-```console
-cd front-end
-npm run build
-cp -r dist/* /var/www/my-react-app/
-```
-
-Test:
-
-```text
-/news
-/news/1
-/login
-/register
-/create-news
-```
 
 ---
 
@@ -515,15 +430,15 @@ Before finishing, check:
 
 ```text
 [ ] The database exists and contains the required tables.
-[ ] The back-end .env file contains the correct database credentials.
+[ ] The backend_klen .env file contains the correct database credentials.
 [ ] The back end builds successfully with npm run build.
-[ ] The back end starts successfully with npm start or pm2.
+[ ] The back end starts successfully with npm start or forever.
 [ ] The API works in the browser, Postman or curl.
 [ ] CORS is enabled if the front end uses a different origin.
 [ ] The front-end API URL points to the deployed back end.
 [ ] The front end builds successfully with npm run build.
 [ ] npm run preview works for the front end.
-[ ] The contents of front-end/dist are copied to the web server.
+[ ] The contents of frontend_klen/dist are copied to the web server.
 [ ] Refreshing /news and /news/1 works.
 ```
 
@@ -546,7 +461,7 @@ Or with pm2:
 cd back-end
 npm install
 npm run build
-pm2 start dist/index.js --name frameworks-api
+forever start dist/index.js
 ```
 
 ## Front end
@@ -556,7 +471,7 @@ cd front-end
 npm install
 npm run build
 npm run preview
-cp -r dist/* /var/www/my-react-app/
+cp -r dist/* ../backend_klen/dist/frontend-build
 ```
 
 ---
