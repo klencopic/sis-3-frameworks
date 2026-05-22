@@ -386,49 +386,13 @@ it runs only while the terminal session is active.
 
 For deployment, you usually want the server to keep running after you close the terminal.
 
-One common tool for this is `pm2`.
-
-Install pm2 globally:
-
 ```console
-npm install -g pm2
+forever start ./dist/index.js
 ```
 
-Start the compiled back end:
-
+To stop the service use:
 ```console
-pm2 start dist/index.js --name frameworks-api
-```
-
-Check running processes:
-
-```console
-pm2 list
-```
-
-View logs:
-
-```console
-pm2 logs frameworks-api
-```
-
-Restart the server:
-
-```console
-pm2 restart frameworks-api
-```
-
-Stop the server:
-
-```console
-pm2 stop frameworks-api
-```
-
-After changing back-end code, rebuild and restart:
-
-```console
-npm run build
-pm2 restart frameworks-api
+forever stop ./dist/index.js
 ```
 
 ---
@@ -461,40 +425,6 @@ or, if using pm2:
 ```console
 npm run build
 pm2 restart frameworks-api
-```
-
-Also remember to update the React front-end API URL so it points to the new port.
-
----
-
-# Part 3: Connecting front end and back end
-
-After deploying both parts, check the full flow.
-
-The back end should be available at something like:
-
-```text
-http://88.200.63.148:5000
-```
-
-The front end should be available at something like:
-
-```text
-http://88.200.63.148
-```
-
-The front-end API config should point to the back end:
-
-```js
-export const API_URL = "http://88.200.63.148:5000";
-```
-
-Then rebuild and redeploy the front end:
-
-```console
-cd front-end
-npm run build
-cp -r dist/* /var/www/my-react-app/
 ```
 
 Test:
@@ -538,15 +468,6 @@ cd back-end
 npm install
 npm run build
 npm start
-```
-
-Or with pm2:
-
-```console
-cd back-end
-npm install
-npm run build
-pm2 start dist/index.js --name frameworks-api
 ```
 
 ## Front end
