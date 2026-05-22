@@ -143,18 +143,20 @@ Open the preview address and test:
 
 ## 5. Deploy the `dist` folder
 
-After building, copy the contents of `dist` to the web server.
+After building the application, copy the contents of the dist folder to the web server. In your case, the web server that hosts the React frontend will be the backend itself.
+
+Keep in mind that the frontend application runs on the client’s computer. This means the user only needs to download the files required to run the application in their browser.
 
 Example:
 
 ```console
-cp -r dist/* /var/www/my-react-app/
+cp -r dist/* ../backend_klen/src/frontend-build
 ```
 
 The deployment folder should then look like this:
 
 ```text
-/var/www/my-react-app/
+.././backend_klen/src/frontend-build
 ├── index.html
 └── assets/
 ```
@@ -163,46 +165,60 @@ Important: usually you copy the contents of `dist`, not the `dist` folder itself
 
 ---
 
-## 6. React Router refresh problem
+## 5. Make back-end serve my-react-app/omdex.html when endpoint / is visited
 
-React Router routes such as:
+Install module path.
+```
+npm install path
 
-```text
-/news
-/news/1
-/about
-/login
 ```
 
-are not real folders on the server. They are handled by React.
-
-This means that clicking links may work, but refreshing `/news/1` may show a server 404 error.
-
-If you use Nginx, configure it like this:
-
-```nginx
-server {
-    listen 80;
-    server_name 88.200.63.148;
-
-    root /var/www/my-react-app;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-}
+Import module path in backend_klen/src/index.ts and implement routing. After modification your
+backend_klen/src/index.ts shuld look like this:
 ```
+import "dotenv/config";
+import express, { Request, Response, NextFunction } from "express";
+import newsRouter from "./routes/news.routes.js";
+import usersRouter from "./routes/users.routes.js";
+import cors from "cors";
+import path from "path";
 
-The important line is:
+const app = express();
+const port = Number(process.env.PORT) || 5000;
+app.use(cors());
 
-```nginx
-try_files $uri $uri/ /index.html;
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use(express.static(path.join(__dirname, "frontend-build")));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"))
+})
+
+app.use("/news", newsRouter);
+app.use("/users", usersRouter);
+
+app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
+  console.error(error);
+
+  res.status(500).json({
+    success: false,
+    message: "Internal server error",
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port: ${port}`);
+});
+
 ```
+Now run backend and visit test node application by visiting http://ADDRESS:BACKEND_PORT/.
 
-It tells the server to return `index.html` for React Router routes.
-
----
+Example:
+```console
+http://88.200.63.148:5000/
+```
 
 # Part 2: Deploying the Node.js back end
 
