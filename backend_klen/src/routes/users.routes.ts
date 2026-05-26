@@ -45,6 +45,12 @@ const loginUser = async (
       return;
     }
 
+    req.session.user = {
+      id: user.id,
+      username: user.user_name,
+      email: user.user_email,
+    };
+
     res.status(200).json({
       success: true,
       message: "Login successful.",
@@ -100,7 +106,48 @@ const registerUser = async (
   }
 };
 
+const getCurrentUser = (
+  req: Request,
+  res: Response
+) => {
+  if (!req.session.user) {
+    res.status(200).json({
+      loggedIn: false,
+      user: null,
+    });
+
+    return;
+  }
+
+  res.status(200).json({
+    loggedIn: true,
+    user: req.session.user,
+  });
+};
+
+const logoutUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  req.session.destroy((error) => {
+    if (error) {
+      next(error);
+      return;
+    }
+
+    res.clearCookie("connect.sid");
+
+    res.status(200).json({
+      success: true,
+      message: "Logout successful.",
+    });
+  });
+};
+
 router.post("/login", loginUser);
 router.post("/register", registerUser);
+router.get("/me", getCurrentUser);
+router.post("/logout", logoutUser);
 
 export default router;

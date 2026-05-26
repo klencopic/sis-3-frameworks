@@ -1,4 +1,7 @@
 import { Request, Response, NextFunction, Router } from "express";
+import multer from "multer";
+import path from "node:path";
+import { requireLogin } from "../middleware/require-login.js";
 import {
   allNews,
   createNewsItem,
@@ -6,6 +9,21 @@ import {
   oneNewsItem,
   updateNewsItem,
 } from "../db/database.js";
+
+
+const storage = multer.diskStorage({
+  destination: (_req, _file, callback) => {
+    callback(null, "src/uploads/news");
+  },
+  filename: (_req, file, callback) => {
+    const uniquePrefix = Date.now();
+    const safeOriginalName = file.originalname.replaceAll(" ", "-");
+
+    callback(null, `${uniquePrefix}-${safeOriginalName}`);
+  },
+});
+
+const upload = multer({ storage });
 
 const router = Router();
 
@@ -62,16 +80,6 @@ const addNewsItem = async (
     slug = slug?.trim();
     text = text?.trim();
 
-     if (!title || !slug || !text) {
-      res.status(400).json({
-        success: false,
-        message: "Title, slug and text are required.",
-      });
-
-      return;
-    }
-
-
     if (!title || !slug || !text) {
       res.status(400).json({
         success: false,
@@ -81,7 +89,11 @@ const addNewsItem = async (
       return;
     }
 
-    const queryResult = await createNewsItem(title, slug, text);
+    const imagePath = req.file
+      ? path.posix.join("uploads", "news", req.file.filename)
+      : null;
+
+    const queryResult = await createNewsItem(title, slug, text, imagePath);
 
     if (queryResult.affectedRows === 1) {
       res.status(201).json({
@@ -171,11 +183,11 @@ const removeNewsItem = async (
   }
 };
 
+router.post("/", requireLogin, upload.single("image"), addNewsItem);
 router.get("/", getAllNews);
 router.get("/:id", getOneNewsItem);
-router.post("/", addNewsItem);
-router.put("/:id", editNewsItem);
-router.delete("/:id", removeNewsItem);
+router.put("/:id", requireLogin, editNewsItem);
+router.delete("/:id", requireLogin, removeNewsItem);
 
 
 export default router;

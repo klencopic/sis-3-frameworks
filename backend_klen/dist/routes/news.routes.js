@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const require_login_js_1 = require("../middleware/require-login.js");
 const database_js_1 = require("../db/database.js");
 const router = (0, express_1.Router)();
 const getAllNews = async (_req, res, next) => {
@@ -115,7 +116,7 @@ const removeNewsItem = async (req, res, next) => {
 };
 router.get("/", getAllNews);
 router.get("/:id", getOneNewsItem);
-router.post("/", addNewsItem);
-router.put("/:id", editNewsItem);
-router.delete("/:id", removeNewsItem);
+router.post("/", require_login_js_1.requireLogin, addNewsItem);
+router.put("/:id", require_login_js_1.requireLogin, editNewsItem);
+router.delete("/:id", require_login_js_1.requireLogin, removeNewsItem);
 exports.default = router;

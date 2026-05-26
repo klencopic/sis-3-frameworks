@@ -15,6 +15,7 @@ export interface NewsItem extends RowDataPacket {
   title: string;
   slug: string;
   text: string;
+  image_path: string | null;
 }
 
 export interface UserLogin extends RowDataPacket {
@@ -41,11 +42,12 @@ export const oneNewsItem = async (id: string): Promise<NewsItem[]> => {
 export const createNewsItem = async (
   title: string,
   slug: string,
-  text: string
+  text: string,
+  imagePath: string | null
 ): Promise<ResultSetHeader> => {
   const [result] = await pool.query<ResultSetHeader>(
-    "INSERT INTO news (title, slug, text) VALUES (?, ?, ?)",
-    [title, slug, text]
+    "INSERT INTO news (title, slug, text, image_path) VALUES (?, ?, ?, ?)",
+    [title, slug, text, imagePath]
   );
 
   return result;
