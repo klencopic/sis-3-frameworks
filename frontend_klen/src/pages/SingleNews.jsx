@@ -90,7 +90,12 @@ return (
         <h1>{newsItem.title}</h1>
         <p>Published: {formatDate(newsItem.created_at)}</p>
         <p>{newsItem.text}</p>
-
+         {newsItem.image_path && (
+          <img
+            src={`${API_URL}/${newsItem.image_path}`}
+            alt={newsItem.title}
+          />
+        )}
         <button onClick={deleteNews}>Delete news</button>
       </article>
     </main>

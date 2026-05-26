@@ -140,3 +140,14 @@ textarea {
   font: inherit;
   resize: vertical;
 }
+span {
+    padding: 10px 18px;
+    border-radius: 10px;
+    color: #374151;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+img {
+  width: 100%;
+}

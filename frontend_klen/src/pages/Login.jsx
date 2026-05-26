@@ -16,6 +16,7 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           username,
           password,
@@ -28,6 +29,7 @@ export default function Login() {
       if (res.ok) {
         localStorage.setItem("user", JSON.stringify(data.user));
         setMessage("Login successful.");
+         window.location.href = "/";
       } else {
         setMessage(data.message || "Login failed.");
       }

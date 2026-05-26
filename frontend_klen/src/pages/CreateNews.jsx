@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { API_URL } from "../config/api";
 
 export default function CreateNews() {
@@ -6,6 +6,34 @@ export default function CreateNews() {
   const [slug, setSlug] = useState("");
   const [text, setText] = useState("");
   const [message, setMessage] = useState("");
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [canAccess, setCanAccess] = useState(false);
+
+  useEffect(() => {
+    async function checkSession() {
+      try {
+        const res = await fetch(`${API_URL}/users/me`, {
+          credentials: "include",
+        });
+
+        const data = await res.json();
+
+        if (data.loggedIn) {
+          setCanAccess(true);
+        } else {
+          setCanAccess(false);
+        }
+      } catch (err) {
+        console.log("Session check error:", err);
+        setCanAccess(false);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    checkSession();
+  }, []);
 
   async function handleCreateNews(event) {
     event.preventDefault();
@@ -17,6 +45,7 @@ export default function CreateNews() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           title,
           slug,
@@ -39,6 +68,28 @@ export default function CreateNews() {
       setMessage("Error creating news item.");
     }
   }
+
+  if (isLoading) {
+    return (
+      <main className="login-page">
+        <section className="login-card">
+          <p>Checking login state...</p>
+        </section>
+      </main>
+    );
+  }
+
+  if (!canAccess) {
+    return (
+      <main className="login-page">
+        <section className="login-card">
+          <h1>Access denied</h1>
+          <p>You must be logged in to create news.</p>
+        </section>
+      </main>
+    );
+  }
+
   return (
     <main className="login-page">
       <section className="login-card">
