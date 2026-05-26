@@ -11,6 +11,8 @@ The material is divided into three main tutorials:
 - [00. Back-end](./Tutorials/00_Back-end.md)
 - [01. Front-end](./Tutorials/01_Front-end.md)
 - [02. Full-stack](./Tutorials/02_FullStack.md)
+- [03. Topics](./Tutorials/03_Topics.md)
+
 
 Each tutorial focuses on one part of a web application. During the lab sessions, we will work through these tutorials step by step and complete a set of deliverables. The deliverables will be announced at the beginning of each session.
 
