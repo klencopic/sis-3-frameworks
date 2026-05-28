@@ -1,3 +1,4 @@
+=======
 # Front-end using React, Vite and React Router
 
 The aim of this tutorial is to create a simple React front-end application that connects to the back-end API created in the previous tutorial.
@@ -958,14 +959,31 @@ front-end/
     └── main.jsx
 ```
 
-You now have a React front-end application that communicates with the API built in the previous tutorial.
+# Final project structure
 
-# Troubleshooting
+At the end of this tutorial, your project should look like this:
 
-If news items do not load make sure backend works as intended at the address and port you specified in the code:
-http://ADDRESS:PORT/users/login)
-
+```text
+front-end/
+├── package.json
+├── vite.config.js
+├── index.html
+└── src/
+    ├── components/
+    │   ├── Menu.jsx
+    │   └── NewsItem.jsx
+    ├── pages/
+    │   ├── About.jsx
+    │   ├── Login.jsx
+    │   ├── News.jsx
+    │   └── SingleNews.jsx
+    ├── routes/
+    │   └── AppRouter.jsx
+    ├── index.css
+    └── main.jsx
+```
 ---
+
 # Exercises
 
 ## Exercise 1: Change the API URL
@@ -1120,9 +1138,9 @@ Important: do not store passwords in `localStorage`.
 
 ---
 
-# Final project structure after implementing exercises
+# Final project structure after implementing the solutions
 
-At the end of these exercises, your project should look like similar to this:
+After implementing solutions your project should look simliar to this:
 
 ```text
 front-end/
@@ -1146,6 +1164,4 @@ front-end/
     │   └── AppRouter.jsx
     ├── index.css
     └── main.jsx
-
----
 
