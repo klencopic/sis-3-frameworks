@@ -956,8 +956,20 @@ This improves the user experience, but remember:
 The front end can hide a page or button, but users can still manually call API endpoints. Therefore, protected endpoints must also use back-end middleware such as `requireLogin`.
 
 ---
+## 8. Update CORS configuration on backend_klen to allow shring credentials 
 
-## 8. Testing checklist
+Update cors configuration in index.ts to:
+```tsx
+  app.use(cors({
+    origin: "http://88.200.63.148:30008",
+    credentials: true,
+  }));
+```
+
+Make sure to use your port number for fontend application!
+
+---
+## 9. Testing checklist
 
 Check the following:
 
