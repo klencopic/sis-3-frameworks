@@ -496,7 +496,7 @@ After logout, `/users/me` should return:
 
 ## 1. Create login middleware
 
-Create a new folder in frontend_klen:
+Create a new folder in backend_klen:
 
 ```console
 mkdir -p src/middleware
